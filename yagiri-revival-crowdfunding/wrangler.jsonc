@@ -1,0 +1,15 @@
+{
+  // Vite + React 版の復旧クラウドファンディングLP。
+  // リポジトリ直下の wrangler.jsonc は旧静的HTML版(./public)を配信する別の Worker なので、
+  // 名前を分けて共存させる。デプロイ前に必ず `npm run build` を実行すること。
+  "name": "yagiri-fund-lp",
+  "main": "dist/server/index.js",
+  "compatibility_date": "2026-08-29",
+  "assets": {
+    "directory": "dist/client",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

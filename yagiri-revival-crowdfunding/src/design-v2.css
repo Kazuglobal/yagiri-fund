@@ -1,0 +1,208 @@
+/* ============================================================
+   DESIGN LAYER v2 — scale, rhythm, brand-black grounds
+   Loaded after styles.css; overrides the original concept layer.
+   ============================================================ */
+
+:root{
+  --black:#14181a;
+  --gold:#c08a1e;
+  --fs-display:clamp(32px,4.4vw,64px);
+  --fs-hero:clamp(30px,3.2vw,46px);
+  --fs-h2:clamp(25px,3vw,42px);
+  --fs-h3:clamp(17px,1.45vw,21px);
+  --fs-body:clamp(13px,.95vw,15px);
+  --sp-sec:clamp(76px,8.4vw,148px);
+}
+
+/* --- line units: each intended line balances on its own --- */
+.ln{display:block;text-wrap:balance}
+
+/* --- section rhythm --- */
+body{overflow-x:clip}
+.section{padding-top:var(--sp-sec);padding-bottom:var(--sp-sec)}
+
+/* --- fluid type scale --- */
+.hero h1{font-size:var(--fs-hero);line-height:1.4;letter-spacing:.015em;white-space:normal}
+.damage-story h2{font-size:var(--fs-display);line-height:1.42;letter-spacing:.01em}
+.damage-story>header{max-width:min(1000px,94%)}
+.story h2,.recovery h2,.join h2,.returns h2,.label-section h2,.people h2,.beer-section h2{
+  font-size:var(--fs-h2);line-height:1.5;letter-spacing:.02em;margin:0 0 clamp(22px,2.3vw,36px)}
+.closing h2{font-size:clamp(21px,1.95vw,29px);line-height:1.52;margin-bottom:14px}
+.damage-details h3,.team-roles h4,body .people>.beliefs h3{font-size:var(--fs-h3);line-height:1.62}
+.damage-appeal h3,.team-story-heading h3{font-size:clamp(20px,2vw,29px);line-height:1.62}
+.modal h2{font-size:clamp(20px,1.9vw,27px)}
+
+/* --- body copy: size + measure --- */
+.story article>p:not(.section-label),
+.recovery-copy>p:not(.section-label):not(.total):not(.reach),
+.label-section>div>p:not(.section-label),
+.people article>p:not(.section-label),
+.team-story-copy p,
+.beer-section>header>p:last-child,
+.damage-lead p,
+.damage-appeal>div:last-child>p{font-size:var(--fs-body);line-height:2.05;max-width:36em}
+
+/* --- eyebrow labels get a hairline lead-in --- */
+.eyebrow,.section-label{display:flex;align-items:center;gap:10px;color:var(--gold)}
+.eyebrow::before,.section-label::before{content:"";flex:0 0 auto;width:22px;border-top:1px solid var(--gold)}
+.join .section-label{justify-content:center}
+
+/* --- buttons --- */
+.primary{padding:16px 30px;font-size:13px;letter-spacing:.06em;transition:background .2s ease,color .2s ease}
+.primary.small{padding:13px 24px;font-size:12px}
+
+/* ---------- HERO ---------- */
+.hero{grid-template-columns:48% 52%;padding-bottom:clamp(78px,7.2vw,112px)}
+.hero-copy{padding-top:clamp(54px,6.4vw,96px);padding-right:clamp(28px,3.4vw,58px);
+  padding-left:max(28px,calc((min(100vw,1440px) - 1300px)/2))}
+.hero-visual{height:clamp(420px,43vw,584px)}
+.hero-lead{font-size:clamp(14px,1.05vw,17px);line-height:2.1;margin:clamp(22px,2.4vw,34px) 0 14px}
+.hero-ask{font-size:clamp(14px,1vw,16px);font-weight:700;color:var(--navy)}
+.short-rule{width:46px;border-top:3px solid var(--gold);margin:clamp(18px,2vw,26px) 0}
+.hero-thumbs button{width:clamp(96px,9.2vw,138px);height:clamp(62px,5.8vw,86px);transition:border-color .2s ease}
+.hero-thumbs button.active{border-color:var(--black)}
+
+.fund-card{top:auto;bottom:0;right:clamp(18px,2.4vw,40px);width:clamp(256px,21vw,310px);
+  background:#fff;border:0;border-top:3px solid var(--black);padding:clamp(22px,1.9vw,28px)}
+.fund-card>p{font-size:11px;letter-spacing:normal;color:#707070;font-weight:400;margin:0 0 12px}
+.fund-card strong{font-size:clamp(26px,2.3vw,34px);letter-spacing:-.01em;color:var(--black)}
+.progress{height:6px;background:#ebebeb}
+.progress span{background:var(--gold)}
+
+/* ---------- FACTS: full-width black band ---------- */
+.facts-band{background:var(--black);color:#fff;
+  padding:clamp(56px,6vw,92px) max(24px,calc((100vw - 1160px)/2))}
+.facts-band-label{display:flex;align-items:center;gap:10px;margin:0 0 clamp(26px,3vw,44px);
+  font-size:11px;font-weight:700;letter-spacing:.18em;color:var(--gold)}
+.facts-band-label::before{content:"";width:22px;border-top:1px solid var(--gold)}
+.facts{max-width:none;margin:0;border-top:1px solid rgba(255,255,255,.2);border-bottom:1px solid rgba(255,255,255,.2)}
+.facts div{border-left:1px solid rgba(255,255,255,.2);padding:clamp(24px,2.3vw,36px) clamp(16px,1.7vw,30px)}
+.facts strong{color:#fff;font-size:clamp(23px,2.7vw,40px);line-height:1.15;letter-spacing:-.01em;margin-bottom:12px}
+.facts span{color:rgba(255,255,255,.62);font-size:11px;line-height:1.7}
+
+/* ---------- DAMAGE ---------- */
+.damage-photo{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);width:100vw;max-width:100vw}
+.damage-photo img{height:clamp(320px,42vw,620px)}
+.damage-photo figcaption{max-width:1160px;margin:14px auto 0;padding:0 24px}
+.damage-story h2 em{border-bottom-width:3px}
+.damage-lead blockquote{font-size:clamp(16px,1.42vw,21px);line-height:1.9;border-left-width:3px;border-color:var(--gold);padding-left:26px}
+.damage-appeal{background:var(--paper-2);border:0;margin-top:clamp(18px,2.2vw,32px);align-items:center;
+  padding:clamp(38px,4.2vw,60px) clamp(28px,3.2vw,54px)}
+
+/* ---------- RECOVERY ---------- */
+.waterline{min-height:clamp(380px,42vw,600px)}
+.waterline figcaption strong{font-size:clamp(34px,4.2vw,62px);line-height:1.1}
+.recovery li{padding:16px 0}
+.recovery li b{font-size:13.5px}
+.total strong{font-size:clamp(19px,1.7vw,26px)}
+
+/* ---------- STORY MEDIA ---------- */
+.story-media figure{margin:0}
+.story-media>figure img{display:block;width:100%;height:clamp(280px,31vw,420px);object-fit:cover}
+.story-media>div figure img{display:block;width:100%;height:clamp(140px,15.5vw,210px);object-fit:cover}
+.story-media figcaption,.damage-documentary figcaption{margin-top:9px;font-size:10px;line-height:1.65;color:#73777a}
+
+.damage-documentary{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:-42px 0 74px}
+.damage-documentary figure{margin:0}
+.damage-documentary img{display:block;width:100%;height:clamp(190px,19vw,270px);object-fit:cover;filter:saturate(.82) contrast(1.02)}
+
+/* ---------- FEATURED / REWARDS ---------- */
+.featured-card{transition:transform .22s cubic-bezier(.2,.7,.3,1),border-color .22s ease}
+.featured-card:hover{border-color:var(--black);transform:translateY(-4px)}
+.featured-card img{height:clamp(150px,13.5vw,200px)}
+.featured-card b{font-size:clamp(15px,1.15vw,18px)}
+.reward-list article{padding:clamp(18px,1.6vw,26px) 18px clamp(18px,1.6vw,26px) 0;transition:background .18s ease}
+.reward-list article:hover{background:rgba(255,255,255,.6)}
+.reward-list article>strong{font-size:clamp(17px,1.45vw,22px);letter-spacing:-.01em;color:var(--black)}
+.reward-list article b{font-size:12.5px;line-height:1.65}
+.reward-list article button,.reward-list article .reward-cta{padding:10px 15px;border-color:var(--black);color:var(--black);transition:background .18s ease,color .18s ease}
+.reward-list article button:hover,.reward-list article .reward-cta:hover{background:var(--black);color:#fff}
+.label-types span{font-size:clamp(28px,2.8vw,42px)}
+
+/* ---------- CLOSING ---------- */
+.closing{max-width:none;padding:0 0 clamp(30px,3vw,48px)}
+.closing>img{height:clamp(400px,44vw,640px)}
+.closing>div{left:max(24px,calc((100vw - 1240px)/2));top:clamp(36px,4.2vw,74px);
+  width:min(470px,45vw);padding:clamp(26px,2.5vw,38px)}
+.closing>strong{right:max(24px,calc((100vw - 1240px)/2));bottom:clamp(48px,5.4vw,88px);font-size:clamp(19px,2.3vw,34px)}
+
+/* ---------- STICKY SUPPORT BAR ---------- */
+.support-bar{position:fixed;left:0;right:0;bottom:0;z-index:30;
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:clamp(18px,2.4vw,44px);
+  padding:14px max(20px,calc((100vw - 1240px)/2));
+  background:var(--black);color:#fff;border-top:1px solid rgba(255,255,255,.14);
+  transform:translateY(106%);transition:transform .38s cubic-bezier(.2,.7,.3,1)}
+.support-bar.show{transform:none}
+.support-bar-figure small{display:block;font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--gold);margin-bottom:4px}
+.support-bar-figure strong{font-size:clamp(19px,1.65vw,24px);line-height:1;letter-spacing:-.01em}
+.support-bar-figure strong span{font-size:12px;margin-left:2px}
+.support-bar-note{margin:0;font-size:11px;line-height:1.75;color:rgba(255,255,255,.66)}
+.support-bar .primary{background:#fff;color:var(--black);padding:13px 26px}
+.support-bar .primary:hover{background:var(--gold);color:#fff}
+footer{padding-bottom:clamp(104px,10vw,128px)}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:960px){
+  .hero h1{font-size:clamp(26px,5.6vw,40px)}
+  .hero{grid-template-columns:1fr}
+  .fund-card{position:static;width:auto;margin:0 clamp(18px,4vw,28px);border-top:3px solid var(--black)}
+  .hero-visual{height:auto;position:static}
+  .hero-visual>img{height:clamp(280px,48vw,420px);margin-bottom:clamp(18px,3vw,26px)}
+  .hero-thumbs{position:static;padding:14px clamp(18px,4vw,28px) 0}
+  .hero{padding-bottom:clamp(56px,7vw,80px)}
+  .damage-photo figcaption{padding:0 22px}
+}
+@media(max-width:760px){
+  .damage-documentary{grid-template-columns:1fr;margin-top:-22px;gap:26px}
+  .damage-documentary img{height:260px}
+  .support-bar{grid-template-columns:1fr auto;gap:14px;padding:11px 16px}
+  .support-bar-note{display:none}
+  .support-bar .primary{padding:12px 18px;font-size:11px}
+  .closing>img{height:clamp(300px,62vw,420px)}
+  .closing>div{position:static;width:auto;background:transparent;padding:0;
+    margin:clamp(26px,5vw,36px) clamp(18px,5vw,34px) 0}
+  .closing>strong{position:static;display:block;text-align:left;color:var(--ink);
+    margin:clamp(22px,4.5vw,32px) clamp(18px,5vw,34px) 0}
+  .closing::after{display:none}
+}
+@media(max-width:620px){
+  .story-media>figure img{height:240px}
+  .story-media>div{grid-template-columns:1fr}
+  .story-media>div figure img{height:220px}
+  .facts{grid-template-columns:1fr 1fr;margin:0}
+  .facts div:nth-child(odd){border-left:0}
+  .facts div:nth-child(n+3){border-top:1px solid rgba(255,255,255,.2)}
+  .hero-thumbs button{width:31%;height:64px}
+}
+@media(prefers-reduced-motion:reduce){
+  .support-bar,.featured-card{transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ---------- full-width section heads ---------- */
+.story,.recovery,.people{display:block}
+.section-head{max-width:min(1000px,80%);margin:0 0 clamp(34px,3.8vw,60px)}
+.section-head .section-label{margin-bottom:clamp(14px,1.6vw,22px)}
+.section-head h2{font-size:clamp(27px,3.9vw,56px);line-height:1.4;letter-spacing:.01em;margin:0}
+.story-body,.recovery-body{display:grid;grid-template-columns:.82fr 1.18fr;gap:clamp(32px,5vw,72px);align-items:start}
+.people>.people-body{display:grid;grid-template-columns:.72fr 1.28fr;gap:clamp(32px,5vw,72px);align-items:start}
+.people-media{display:grid;grid-template-columns:1.15fr .85fr;gap:8px}
+body .people>.beliefs,body .people>.team-story{margin-top:clamp(44px,5.2vw,78px)}
+
+/* headings that live inside a narrow column stay column-sized */
+.label-section h2{font-size:clamp(24px,2.6vw,36px)}
+.join h2{font-size:clamp(26px,3.4vw,50px)}
+.returns h2,.beer-section h2{font-size:clamp(25px,2.9vw,40px)}
+
+@media(max-width:960px){
+  .section-head{max-width:none}
+  .story-body,.recovery-body,.people>.people-body{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+  .people-media{grid-template-columns:1fr}
+}
+
+/* closing: keep the white tagline legible over a bright sky */
+.closing::after{content:"";position:absolute;left:0;right:0;bottom:clamp(30px,3vw,48px);height:52%;
+  background:linear-gradient(to bottom,rgba(12,14,16,0),rgba(12,14,16,.62));pointer-events:none;z-index:1}
+.closing>div,.closing>strong{z-index:2}
