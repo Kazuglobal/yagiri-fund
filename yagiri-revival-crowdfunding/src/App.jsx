@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 
 const rewards = [
-  ['3,000円', '応援枠', 'オリジナルステッカー／タップルーム1杯無料券', '40', '/assets/reward-support.jpg', 'ステッカーとドリンク券、クラフトビールのイメージ'],
-  ['5,000円', '早割', '瓶ビール6本', '30', '/assets/reward-beer-6.jpg', '琥珀色のクラフトビール瓶6本'],
-  ['6,000円', 'ビールで応援', '瓶ビール6本', '80', '/assets/reward-beer-6.jpg', '琥珀色のクラフトビール瓶6本'],
-  ['12,000円', 'ビールで応援', '瓶ビール12本', '30', '/assets/reward-beer-12.jpg', '箱に収めたクラフトビール瓶12本'],
-  ['15,000円', '贈る応援', 'オリジナルラベル瓶ビール6本', '15', '/assets/reward-custom-label.jpg', 'オリジナルラベルを付けたクラフトビールのギフト'],
-  ['20,000円', '醸造所を体験', '醸造所見学プラン 1組2名', '15', '/assets/reward-brewery-tour.jpg', '醸造設備を見学する二人と案内する醸造家'],
-  ['22,000円', '贈る応援', '完全オリジナルラベル瓶ビール6本', '5', '/assets/reward-custom-label.jpg', 'オリジナルラベルを付けたクラフトビールのギフト'],
-  ['25,000円', 'お店で応援', '瓶ビール6本＋お食事券10,000円分', '12', '/assets/reward-dining.jpg', 'クラフトビール瓶と食事、食事券のセット'],
-  ['40,000円', 'お店で応援', '瓶ビール12本＋お食事券20,000円分', '8', '/assets/reward-dining.jpg', 'クラフトビール瓶と食事、食事券のセット'],
-  ['80,000円', 'イベント', '出張タップ 15L樽×2本', '3', '/assets/reward-event-tap.jpg', '出張用の二口ビールタップと15リットル樽2本'],
-  ['100,000円', '一緒につくる', 'オリジナルビール醸造権＋ネーミングライツ', '2', '/assets/reward-brew-day.jpg', '麦芽とホップを確認しながらビールを仕込む様子'],
-  ['300,000円', 'バッチオーナー', 'ケグ納品 15Lワンウェイ樽×11本', '1', '/assets/reward-keg-lot.jpg', '納品用に並べたクラフトビール樽11本'],
-  ['380,000円', 'バッチオーナー', '瓶納品 約500本', '1', '/assets/reward-bottle-lot.jpg', '約500本分のクラフトビールを梱包したケース'],
+  ['3,000円', '応援枠', 'オリジナルステッカー／タップルーム1杯無料券', '40', '/assets/reward-support.jpg', 'ステッカーとドリンク券、クラフトビールのイメージ', 'https://www.yagiribrewery.com/items/155698632'],
+  ['5,000円', '早割', '瓶ビール6本', '30', '/assets/reward-beer-6.jpg', '琥珀色のクラフトビール瓶6本', 'https://www.yagiribrewery.com/items/155699333'],
+  ['6,000円', 'ビールで応援', '瓶ビール6本', '80', '/assets/reward-beer-6.jpg', '琥珀色のクラフトビール瓶6本', 'https://www.yagiribrewery.com/items/155699770'],
+  ['12,000円', 'ビールで応援', '瓶ビール12本', '30', '/assets/reward-beer-12.jpg', '箱に収めたクラフトビール瓶12本', 'https://www.yagiribrewery.com/items/155699896'],
+  ['15,000円', '贈る応援', 'オリジナルラベル瓶ビール6本', '15', '/assets/reward-custom-label.jpg', 'オリジナルラベルを付けたクラフトビールのギフト', 'https://www.yagiribrewery.com/items/155700597'],
+  ['20,000円', '醸造所を体験', '醸造所見学プラン 1組2名', '15', '/assets/reward-brewery-tour.jpg', '醸造設備を見学する二人と案内する醸造家', 'https://www.yagiribrewery.com/items/155702192'],
+  ['22,000円', '贈る応援', '完全オリジナルラベル瓶ビール6本', '5', '/assets/reward-custom-label.jpg', 'オリジナルラベルを付けたクラフトビールのギフト', 'https://www.yagiribrewery.com/items/155701267'],
+  ['25,000円', 'お店で応援', '瓶ビール6本＋お食事券10,000円分', '12', '/assets/reward-dining.jpg', 'クラフトビール瓶と食事、食事券のセット', 'https://www.yagiribrewery.com/items/155702722'],
+  ['40,000円', 'お店で応援', '瓶ビール12本＋お食事券20,000円分', '8', '/assets/reward-dining.jpg', 'クラフトビール瓶と食事、食事券のセット', 'https://www.yagiribrewery.com/items/155702823'],
+  ['80,000円', 'イベント', '出張タップ 15L樽×2本', '3', '/assets/reward-event-tap.jpg', '出張用の二口ビールタップと15リットル樽2本', 'https://www.yagiribrewery.com/items/155702966'],
+  ['100,000円', '一緒につくる', 'オリジナルビール醸造権＋ネーミングライツ', '2', '/assets/reward-brew-day.jpg', '麦芽とホップを確認しながらビールを仕込む様子', 'https://www.yagiribrewery.com/items/155703259'],
+  ['300,000円', 'バッチオーナー', 'ケグ納品 15Lワンウェイ樽×11本', '1', '/assets/reward-keg-lot.jpg', '納品用に並べたクラフトビール樽11本', 'https://www.yagiribrewery.com/items/155703648'],
+  ['380,000円', 'バッチオーナー', '瓶納品 約500本', '1', '/assets/reward-bottle-lot.jpg', '約500本分のクラフトビールを梱包したケース', 'https://www.yagiribrewery.com/items/155705721'],
 ];
 
 const gallery = [
@@ -31,7 +31,6 @@ const featured = [
 
 export function App() {
   const [photo, setPhoto] = useState(0);
-  const [selected, setSelected] = useState(null);
   const [showBar, setShowBar] = useState(false);
 
   useEffect(() => {
@@ -237,7 +236,7 @@ export function App() {
     <section id="returns" className="returns section">
       <header><p className="section-label">リターン一覧</p><h2><span className="ln">3,000円から、</span><span className="ln">再開の一部になれます。</span></h2><p>発送は2027年1月以降の予定です。お酒を含むリターンは20歳以上の方に限ります。</p></header>
       <div className="reward-list">
-        {rewards.map(([price, kind, title, left, image, alt]) => <article key={price + title}>
+        {rewards.map(([price, kind, title, left, image, alt, url]) => <article key={price + title}>
           <img className="reward-image" src={image} alt={alt} />
           <small className="reward-kind">{kind}</small>
           <strong className="reward-price">{price}</strong>
@@ -246,7 +245,7 @@ export function App() {
             <li>残り {left}口</li>
             <li>2027年1月以降お届け予定</li>
           </ul>
-          <button onClick={() => setSelected({ price, title })}>詳しく見る</button>
+          <a className="reward-cta" href={url} target="_blank" rel="noopener noreferrer">詳しく見る</a>
         </article>)}
       </div>
     </section>
@@ -350,6 +349,5 @@ export function App() {
       <button className="primary small" onClick={go}>このプロジェクトを支援する</button>
     </div>
 
-    {selected && <div className="modal" onMouseDown={() => setSelected(null)}><div onMouseDown={event => event.stopPropagation()}><button className="modal-close" onClick={() => setSelected(null)} aria-label="閉じる">閉じる</button><p className="section-label">{selected.price}</p><h2>{selected.title}</h2><p>リターンの申込先が決まり次第、ここから支援手続きへ進めるようになります。</p><button className="primary" onClick={() => setSelected(null)}>内容を確認しました</button></div></div>}
   </main>;
 }
