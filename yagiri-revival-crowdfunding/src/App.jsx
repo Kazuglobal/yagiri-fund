@@ -23,7 +23,7 @@ const gallery = [
 ];
 
 const featured = [
-  ['ビールで応援する', '再開後の一番搾りを、6本まとめてご自宅へ。', '6,000円〜', '/assets/brewery-before.webp'],
+  ['ビールで応援する', '再開後の初仕込みビールを、6本まとめてご自宅へ。', '6,000円〜', '/assets/brewery-before.webp'],
   ['醸造所を体験する', '普段は入れない仕込みの現場に、1組2名でご案内。', '20,000円', '/assets/watanabe-ishida-team.png'],
   ['お店で乾杯する', '瓶ビール6本と、お食事券10,000円分。店で会いましょう。', '25,000円〜', '/assets/taproom-toast.png'],
   ['特別な一本を贈る', '名前や記念日を刻んだ、世界に一つのラベルで。', '15,000円〜', '/assets/brewery-before.webp'],
@@ -76,7 +76,7 @@ export function App() {
       <div className="hero-copy">
         <p className="eyebrow">矢切ブルワリー 復旧支援プロジェクト</p>
         <h1><span className="ln">水に沈んだ醸造所を、</span><span className="ln">もう一度、動かしたい。</span></h1>
-        <p className="hero-lead"><span className="ln">70cmの泥水が、7年分をのみ込みました。</span><span className="ln">保険の基準にあと5cm届かず、補償は0円。</span><span className="ln">それでも、この場所からまた出したい。</span></p>
+        <p className="hero-lead"><span className="ln">70cmの泥水が、7年分をのみ込みました。</span><span className="ln">保険の基準にあと5cm届かず、補償は0円。</span><span className="ln">それでも、この場所からもう一度、ビールを届けたい。</span></p>
         <span className="short-rule" />
         <p className="hero-ask">再開までに必要なのは、約180万円です。</p>
         <ul className="hero-tags"><li>#クラフトビール</li><li>#千葉・松戸</li><li>#矢切</li><li>#豪雨被害からの復旧</li></ul>
@@ -126,16 +126,12 @@ export function App() {
         <p className="section-label">私たちのストーリー</p>
         <h2><span className="ln">はじまりは、江戸川のほとりの</span><span className="ln">小さな醸造所でした。</span></h2>
       </header>
-      <ul className="points">
-        <li>令和8年の千葉豪雨で最大70cm浸水。麦芽とホップ、ビールにしておよそ5,000杯分の原料を失いました。</li>
-        <li>冷蔵庫内の水位は40cm。保険が下りる基準は屋内浸水45cm。5cm届かず、補償は0円でした。</li>
-        <li>いただいた応援は、エアコン・冷却器・原料の復旧に充てます。必要額は約180万円です。</li>
-      </ul>
       <div className="story-body">
       <article>
-        <p>矢切は、川をはさんで東京と向かい合う町です。寅さんの「矢切の渡し」、戦国の古戦場。名前だけは知られていても、わざわざ降りる駅ではありません。2019年、その矢切でビールを仕込みはじめました。</p>
-        <p>タップルーム「YAGIRIYA」には、近所の方も、ビールを目当てに電車で来た方も座ります。飲んだ人が「これはどこでつくっているのか」と調べ、矢切まで足を運ぶ。その循環がようやく回りはじめ、松戸西口に2軒目を出す準備を進めていました。</p>
-        <p>令和8年の千葉豪雨が重なったのは、その途中でした。泥は設備の内側まで入り込み、洗っても落ちきりません。いまも室温は42℃のまま、仕込みは再開できていません。</p>
+        <p>矢切は、川をはさんで東京と向かい合う町です。寅さんの「矢切の渡し」や戦国の古戦場として名前は知られていても、わざわざ降りる人は多くありませんでした。</p>
+        <p>2019年、私たちはその矢切に小さな醸造所をつくり、ビールを仕込みはじめました。</p>
+        <p>タップルーム「YAGIRIYA」には、近所の方も、遠方から電車で訪れる方も集まります。飲んだ人が「どこでつくっているんだろう」と興味を持ち、矢切まで足を運んでくれる。その温かい循環がようやく形になり、松戸駅西口に2軒目の店舗を準備していた矢先でした。</p>
+        <p>最大70cmの泥水が、醸造所をのみ込みました。</p>
       </article>
       <div className="story-media">
         <figure>
@@ -157,7 +153,7 @@ export function App() {
       </header>
       <div className="damage-lead">
         <blockquote><span className="ln">「すべてをリセットするような非情なことが、</span><span className="ln">本当に起こりうるのだと思い知らされました。」</span></blockquote>
-        <p>水は醸造所の中を最大70cmまで満たし、3坪のプレハブ冷蔵庫を押し流して大きく歪ませました。中に積んでいた麦芽とホップは、袋のまま泥水をかぶりました。使えなくなった原料は、ビールにしておよそ5,000杯分。仕込む前のビールが、一晩で消えたことになります。</p>
+        <p>水は醸造所の中を最大70cmまで満たし、3坪のプレハブ冷蔵庫を押し流して大きく歪ませました。中に積んでいた麦芽とホップは、袋のまま泥水をかぶりました。使えなくなった原料は、ビールにしておよそ5,000杯分。仕込むはずだったビールが、たった一晩で消えてしまいました。</p>
       </div>
       <figure className="damage-photo">
         <img src="/assets/flood-interior-mud.webp" alt="泥水が引いたあとの醸造所内" />
@@ -206,7 +202,7 @@ export function App() {
       </header>
       <div className="recovery-body">
       <div className="recovery-copy">
-        <p>復旧費用は合計でおよそ180万円。内訳は、なくても醸造できる設備を一つも含んでいません。すべて、安全なビールをつくるために欠かせないものです。</p>
+        <p>復旧費用は合計でおよそ180万円。内訳に、無駄なものは一切ありません。すべて、安全でおいしいビールをつくるために不可欠な設備です。</p>
         <ol>
           <li><span>01</span><div><b>エアコン3台の交換</b><small>室温42℃を下げないと仕込めません。80万円以上</small></div></li>
           <li><span>02</span><div><b>冷却器（チラー）の交換</b><small>発酵温度が狂えば、味が再現できません。50万円</small></div></li>
@@ -234,7 +230,7 @@ export function App() {
     </section>
 
     <section id="returns" className="returns section">
-      <header><p className="section-label">リターン一覧</p><h2><span className="ln">3,000円から、</span><span className="ln">再開の一部になれます。</span></h2><p>発送は2027年1月以降の予定です。お酒を含むリターンは20歳以上の方に限ります。</p></header>
+      <header><p className="section-label">リターン一覧</p><h2><span className="ln">3,000円から、</span><span className="ln">再開への一歩を支えていただけます。</span></h2><p>発送は2027年1月以降の予定です。お酒を含むリターンは20歳以上の方に限ります。</p></header>
       <div className="reward-list">
         {rewards.map(([price, kind, title, left, image, alt, url]) => <article key={price + title}>
           <img className="reward-image" src={image} alt={alt} />
@@ -296,7 +292,7 @@ export function App() {
         </div>
         <div className="team-story-copy">
           <p>矢切ブルワリーを支えているのは、代表の渡辺と、醸造を担当する石田です。二人の出会いは大学の自転車競技部。ともに練習し、同じレースを走った経験から、言葉を尽くさなくても互いの考えを理解できる、厚いチームワークが育ちました。</p>
-          <p>いま向き合うのは、自転車ではなく醸造タンクです。役割は違っても、味を決めるときは必ず二人。どちらか一人が納得しただけのビールは、世に出しません。二人ともが「うまい」と言ったものだけを届ける。創業から変えていない、たった一つの基準です。</p>
+          <p>いま向き合うのは、自転車ではなく醸造タンクです。役割は違っても、味を決めるときは必ず二人。どちらか一人が納得しただけのビールは、世に出しません。二人そろって「うまい」と納得したものだけを届ける。創業から変えていない、たった一つの基準です。</p>
         </div>
         <div className="team-roles">
           <article><span>REPRESENTATIVE</span><h4>渡辺 ／ 代表</h4><p>矢切という土地と人をつなぎ、ビールをきっかけに新しい出会いが生まれる場所を育てます。</p></article>
@@ -313,7 +309,7 @@ export function App() {
         <p>初めての方には「ビールってこんなに飲みやすいんだ」という驚きを。愛好家には「この組み合わせは初めてだ」という発見を。飲みやすさと個性は両立できる。そこだけは、ずっと疑わずにやってきました。以下の4本は、いずれもいまは仕込めません。</p>
       </header>
       <div className="beer-intro">
-        <article><b>はじめての方へ</b><p>フルーツを使った親しみやすい味わいや、軽やかな飲み口から。苦味が得意でない方にも楽しめる入口を用意しています。</p></article>
+        <article><b>はじめての方へ</b><p>フルーツを使った親しみやすい味わいや、軽やかな飲み口から。苦味が苦手な方でも楽しめるラインナップを用意しています。</p></article>
         <article><b>愛好家の方へ</b><p>ホップの組み合わせや投入方法、瓶内熟成まで。飲むたびに新しい表情が見つかる、奥行きのある一杯を追求しています。</p></article>
         <article><b>矢切を知らない方へ</b><p>「このビール、どこでつくっているんだろう」。印象に残る味わいから、この町を知るきっかけをつくります。</p></article>
       </div>
@@ -329,7 +325,7 @@ export function App() {
       <p className="section-label">支援に関するご案内</p>
       <div>
         <article><b>お食事券・1杯無料券</b><p>有効期限は発行から1年です。現金との引き換えはできません。</p></article>
-        <article><b>オリジナルビールの制作</b><p>最終的なレシピの決定権は醸造側に残ります。副原料は取り扱い実績のある範囲でのご相談となります。</p></article>
+        <article><b>オリジナルビールの制作</b><p>品質担保のため、最終的な醸造レシピの決定・調整はブルワリーにお任せいただく形となります。副原料は取り扱い実績のある範囲でのご相談となります。</p></article>
         <article><b>発送について</b><p>瓶の発送は6本単位です。復旧の進捗により発送時期が前後する場合があります。</p></article>
       </div>
       <p className="legal">20歳未満の方の飲酒は法律で禁止されています。有償で提供する場合は、支援者様側に酒類販売業免許が必要です。</p>
@@ -337,7 +333,7 @@ export function App() {
 
     <section className="closing section">
       <img src="/assets/yagiri-river.png" alt="夕暮れの矢切周辺を表現した構成イメージ" />
-      <div><h2><span className="ln">次の乾杯を、</span><span className="ln">一緒につくりませんか。</span></h2><p><span className="ln">あなたの6,000円が、止まった醸造所を</span><span className="ln">もう一度動かす最初の一押しになります。</span></p><button className="primary" onClick={go}>このプロジェクトを支援する</button></div>
+      <div><h2><span className="ln">次の乾杯を、</span><span className="ln">一緒につくりませんか。</span></h2><p><span className="ln">あなたの温かい一押しが、止まった醸造所を</span><span className="ln">もう一度動かす力になります。</span></p><button className="primary" onClick={go}>このプロジェクトを支援する</button></div>
       <strong>矢切から、また、ビールを。</strong>
     </section>
 

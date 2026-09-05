@@ -48,14 +48,6 @@
 .hero-tags{list-style:none;display:flex;flex-wrap:wrap;gap:6px 16px;margin:clamp(18px,2vw,26px) 0 0;padding:0}
 .hero-tags li{font-size:11px;color:#8a8a8a;letter-spacing:.02em}
 
-/* ---------- three-point summary ---------- */
-.points{list-style:none;display:grid;gap:14px;margin:0 0 clamp(38px,4.4vw,64px);
-  padding:clamp(22px,2.4vw,34px) clamp(24px,2.6vw,38px);
-  background:var(--paper-2);border-left:3px solid var(--gold)}
-.points li{position:relative;padding-left:30px;font-size:var(--fs-body);line-height:1.85;color:var(--ink)}
-.points li::before{content:"";position:absolute;left:1px;top:.52em;width:15px;height:8px;
-  border-left:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(-45deg)}
-
 /* ---------- rewards as cards ---------- */
 .reward-list{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,1.3vw,18px);border-top:0}
 .reward-list article{display:flex;flex-direction:column;align-items:stretch;gap:0;margin:0;
