@@ -76,7 +76,7 @@ export function App() {
       <div className="hero-copy">
         <p className="eyebrow">矢切ブルワリー 復旧支援プロジェクト</p>
         <h1><span className="ln">水に沈んだ醸造所を、</span><span className="ln">もう一度、動かしたい。</span></h1>
-        <p className="hero-lead"><span className="ln">70cmの泥水が、7年分をのみ込みました。</span><span className="ln">保険の基準にあと5cm届かず、補償は0円。</span><span className="ln">それでも、この場所からもう一度、ビールを届けたい。</span></p>
+        <p className="hero-lead"><span className="ln">一晩の泥水が、7年分をのみ込みました。</span><span className="ln">保険の基準にあと5cm届かず、補償は0円。</span><span className="ln">それでも、この場所からもう一度、ビールを届けたい。</span></p>
         <span className="short-rule" />
         <p className="hero-ask">再開までに必要なのは、約180万円です。</p>
         <ul className="hero-tags"><li>#クラフトビール</li><li>#千葉・松戸</li><li>#矢切</li><li>#豪雨被害からの復旧</li></ul>
@@ -124,14 +124,14 @@ export function App() {
     <section id="story" className="story section">
       <header className="section-head">
         <p className="section-label">私たちのストーリー</p>
-        <h2><span className="ln">はじまりは、江戸川のほとりの</span><span className="ln">小さな醸造所でした。</span></h2>
+        <h2><span className="ln">矢切の一杯を、八柱の</span><span className="ln">小さな醸造所でつくっています。</span></h2>
       </header>
       <div className="story-body">
       <article>
         <p>矢切は、川をはさんで東京と向かい合う町です。寅さんの「矢切の渡し」や戦国の古戦場として名前は知られていても、わざわざ降りる人は多くありませんでした。</p>
-        <p>2019年、私たちはその矢切に小さな醸造所をつくり、ビールを仕込みはじめました。</p>
-        <p>タップルーム「YAGIRIYA」には、近所の方も、遠方から電車で訪れる方も集まります。飲んだ人が「どこでつくっているんだろう」と興味を持ち、矢切まで足を運んでくれる。その温かい循環がようやく形になり、松戸駅西口に2軒目の店舗を準備していた矢先でした。</p>
-        <p>最大70cmの泥水が、醸造所をのみ込みました。</p>
+        <p>2019年、私たちはこの町の名前を掲げてビールを仕込みはじめました。矢切のタップルーム「YAGIRIYA」でお客さまを迎え、ビールをつくるのは、同じ松戸市内の八柱にある小さな醸造所です。</p>
+        <p>タップルームには、近所の方も、遠方から電車で訪れる方も集まります。飲んだ人が「どこでつくっているんだろう」と興味を持ち、矢切まで足を運んでくれる。その温かい循環がようやく形になり、松戸駅西口に2軒目の店舗を準備していた矢先でした。</p>
+        <p>豪雨の泥水が、その八柱の醸造所をのみ込みました。</p>
       </article>
       <div className="story-media">
         <figure>
@@ -140,7 +140,7 @@ export function App() {
         </figure>
         <div>
           <figure><img src="/assets/cleanup-keg.webp" alt="浸水した樽を洗浄する様子" /><figcaption>浸水した樽を一本ずつ洗浄しています。</figcaption></figure>
-          <figure><img src="/assets/flood-waterline.webp" alt="窓に残った水位の跡" /><figcaption>窓に残った水位の跡。</figcaption></figure>
+          <figure><img src="/assets/flood-waterline.webp" alt="外壁と窓に残った屋外の水位の跡" /><figcaption>外壁と窓に残った、屋外の水位の跡。</figcaption></figure>
         </div>
       </div>
       </div>
@@ -153,7 +153,7 @@ export function App() {
       </header>
       <div className="damage-lead">
         <blockquote><span className="ln">「すべてをリセットするような非情なことが、</span><span className="ln">本当に起こりうるのだと思い知らされました。」</span></blockquote>
-        <p>水は醸造所の中を最大70cmまで満たし、3坪のプレハブ冷蔵庫を押し流して大きく歪ませました。中に積んでいた麦芽とホップは、袋のまま泥水をかぶりました。使えなくなった原料は、ビールにしておよそ5,000杯分。仕込むはずだったビールが、たった一晩で消えてしまいました。</p>
+        <p>敷地に流れ込んだ水は、建物の外壁に高い跡を残しました。醸造所の床にたまった水は約10cm。それでも水圧は、3坪のプレハブ冷蔵庫を押し流して大きく歪ませ、庫内には40cmの泥水がたまりました。中に積んでいた麦芽とホップは、袋のまま泥水をかぶりました。使えなくなった原料は、ビールにしておよそ5,000杯分。仕込むはずだったビールが、たった一晩で消えてしまいました。</p>
       </div>
       <figure className="damage-photo">
         <img src="/assets/flood-interior-mud.webp" alt="泥水が引いたあとの醸造所内" />
@@ -161,7 +161,7 @@ export function App() {
       </figure>
       <div className="damage-documentary" aria-label="被災状況の記録写真">
         <figure><img src="/assets/flooded-kegs.webp" alt="浸水で倒れた樽" /><figcaption>流され、設備の間に倒れた樽。</figcaption></figure>
-        <figure><img src="/assets/flood-waterline.webp" alt="窓に残った浸水ライン" /><figcaption>窓に残った水位の跡。この高さまで水が来ました。</figcaption></figure>
+        <figure><img src="/assets/flood-waterline.webp" alt="外壁と窓に残った屋外の浸水ライン" /><figcaption>外壁と窓に残った跡。敷地はこの高さまで水に浸かりました。</figcaption></figure>
         <figure><img src="/assets/damaged-cold-room.webp" alt="浸水で歪んだプレハブ冷蔵庫" /><figcaption>水に押され、パネルが歪んだプレハブ冷蔵庫。</figcaption></figure>
       </div>
       <div className="damage-details">
@@ -187,7 +187,7 @@ export function App() {
           <h3><span className="ln">待っていてくださる方が、</span><span className="ln">いることだけが支えです。</span></h3>
         </div>
         <div>
-          <p>矢切でつくるから、矢切のビールです。この町の名前を背負って出してきた以上、直す場所もここしかありません。</p>
+          <p>この醸造所でつくるから、矢切のビールです。町の名前を背負って出してきた以上、直す場所もここしかありません。</p>
           <p>正直に言えば、自分たちの力だけでは立て直せないところまで来ています。それでも「再開を待っています」「また飲める日を楽しみにしています」と声をかけてくださる方がいます。その一言が、いまの私たちを立たせています。</p>
           <p><strong><span className="ln">この場所からもう一度ビールを出すために、</span><span className="ln">どうか、お力を貸していただけないでしょうか。</span></strong></p>
           <button className="primary" onClick={go}>再出発を支援する</button>
@@ -212,8 +212,8 @@ export function App() {
         <p className="reach">6,000円のご支援が167人分集まれば、第一目標の100万円に届きます。</p>
       </div>
       <figure className="waterline">
-        <img src="/assets/flood-waterline.webp" alt="窓と外壁に残る浸水の跡" />
-        <figcaption><span>浸水の高さ</span><strong>70cm</strong></figcaption>
+        <img src="/assets/flood-waterline.webp" alt="プレハブ冷蔵庫の内側に残る浸水の跡" />
+        <figcaption><span>冷蔵庫内の浸水</span><strong>40cm</strong></figcaption>
       </figure>
       </div>
     </section>
