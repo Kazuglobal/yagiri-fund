@@ -89,3 +89,9 @@
 .featured-card img{width:100%;height:auto;aspect-ratio:1;object-fit:contain;
   background:#fff;border-bottom:1px solid var(--line);filter:none}
 @media(max-width:620px){.featured-card img{height:auto}}
+
+/* ---------- All-in disclosure ---------- */
+.fund-allin{margin:0 0 14px;padding:10px 11px;background:#fafafa;border-left:2px solid var(--gold);
+  font-size:10px;line-height:1.75;color:#555}
+.fund-allin b{display:block;font-size:10.5px;letter-spacing:.06em;color:var(--gold);margin-bottom:3px}
+.guide .legal a{color:var(--orange);text-decoration:underline}

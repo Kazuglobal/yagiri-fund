@@ -112,6 +112,7 @@ export function App() {
             <div><dt>ネクストゴール</dt><dd>2,000,000<span>円</span></dd></div>
           </dl>
           <p className="fund-goal-note">ネクストゴールは、次の豪雨で二度と止めないための設備に充てます。</p>
+          <p className="fund-allin"><b>All-in方式</b>目標金額に届かなかった場合も、集まった金額で復旧を進めます。ご注文は成立し、リターンは必ずお届けします。</p>
           <button className="primary" onClick={go}>このプロジェクトを支援する</button>
           <p className="fund-note">「—」は公開時に実績値へ差し替えます。</p>
         </aside>
@@ -230,7 +231,7 @@ export function App() {
     </section>
 
     <section id="returns" className="returns section">
-      <header><p className="section-label">リターン一覧</p><h2><span className="ln">3,000円から、</span><span className="ln">再開への一歩を支えていただけます。</span></h2><p>発送は2027年1月以降の予定です。お酒を含むリターンは20歳以上の方に限ります。</p></header>
+      <header><p className="section-label">リターン一覧</p><h2><span className="ln">3,000円から、</span><span className="ln">再開への一歩を支えていただけます。</span></h2><p>All-in方式のため、目標未達でもご注文は成立します。発送は2027年1月以降の予定です。お酒を含むリターンは20歳以上の方に限ります。</p></header>
       <div className="reward-list">
         {rewards.map(([price, kind, title, left, image, alt, url]) => <article key={price + title}>
           <img className="reward-image" src={image} alt={alt} />
@@ -321,11 +322,14 @@ export function App() {
     <section id="faq" className="guide section">
       <p className="section-label">支援に関するご案内</p>
       <div>
+        <article><b>All-in方式です</b><p>目標金額に到達しなかった場合も、集まった金額で復旧を進めます。目標未達を理由としたご注文の取り消し・返金は行いません。</p></article>
+        <article><b>キャンセル・返品</b><p>ご注文確定後のお客様都合によるキャンセル・返品はお受けできません。商品に欠陥があった場合はお取り替えいたします。</p></article>
+        <article><b>お支払いのタイミング</b><p>ご注文確定時にお支払いが確定します。目標金額の達成を待って決済されるものではありません。</p></article>
+        <article><b>発送について</b><p>瓶の発送は6本単位です。発送は2027年1月以降を予定しており、復旧の進捗により前後する場合があります。最新状況は活動報告でお知らせします。</p></article>
         <article><b>お食事券・1杯無料券</b><p>有効期限は発行から1年です。現金との引き換えはできません。</p></article>
         <article><b>オリジナルビールの制作</b><p>品質担保のため、最終的な醸造レシピの決定・調整はブルワリーにお任せいただく形となります。副原料は取り扱い実績のある範囲でのご相談となります。</p></article>
-        <article><b>発送について</b><p>瓶の発送は6本単位です。復旧の進捗により発送時期が前後する場合があります。</p></article>
       </div>
-      <p className="legal">20歳未満の方の飲酒は法律で禁止されています。有償で提供する場合は、支援者様側に酒類販売業免許が必要です。</p>
+      <p className="legal">20歳未満の方の飲酒は法律で禁止されています。20歳未満の方はお酒を含むリターンをご購入いただけません。リターンのお酒を有償で第三者に提供する場合は、支援者様側に酒類販売業免許が必要です。<br />ご注文・決済は矢切ブルワリー公式オンラインショップで行われます。事業者情報・お支払い方法・返品条件の詳細は<a href="https://www.yagiribrewery.com/law" target="_blank" rel="noopener noreferrer">特定商取引法に基づく表記</a>をご確認ください。</p>
     </section>
 
     <section className="closing section">
