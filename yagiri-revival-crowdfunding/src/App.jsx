@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 
 const rewards = [
-  ['3,000円', '応援枠', 'オリジナルステッカー／タップルーム1杯無料券', '40', '/assets/reward-support.jpg', 'ステッカーとドリンク券、クラフトビールのイメージ', 'https://www.yagiribrewery.com/items/155698632'],
-  ['5,000円', '早割', '瓶ビール6本', '30', '/assets/reward-beer-6.jpg', '琥珀色のクラフトビール瓶6本', 'https://www.yagiribrewery.com/items/155699333'],
-  ['6,000円', 'ビールで応援', '瓶ビール6本', '80', '/assets/reward-beer-6.jpg', '琥珀色のクラフトビール瓶6本', 'https://www.yagiribrewery.com/items/155699770'],
-  ['12,000円', 'ビールで応援', '瓶ビール12本', '30', '/assets/reward-beer-12.jpg', '箱に収めたクラフトビール瓶12本', 'https://www.yagiribrewery.com/items/155699896'],
-  ['15,000円', '贈る応援', 'オリジナルラベル瓶ビール6本', '15', '/assets/reward-custom-label.jpg', 'オリジナルラベルを付けたクラフトビールのギフト', 'https://www.yagiribrewery.com/items/155700597'],
-  ['20,000円', '醸造所を体験', '醸造所見学プラン 1組2名', '15', '/assets/reward-brewery-tour.jpg', '醸造設備を見学する二人と案内する醸造家', 'https://www.yagiribrewery.com/items/155702192'],
-  ['22,000円', '贈る応援', '完全オリジナルラベル瓶ビール6本', '5', '/assets/reward-custom-label.jpg', 'オリジナルラベルを付けたクラフトビールのギフト', 'https://www.yagiribrewery.com/items/155701267'],
-  ['25,000円', 'お店で応援', '瓶ビール6本＋お食事券10,000円分', '12', '/assets/reward-dining.jpg', 'クラフトビール瓶と食事、食事券のセット', 'https://www.yagiribrewery.com/items/155702722'],
-  ['40,000円', 'お店で応援', '瓶ビール12本＋お食事券20,000円分', '8', '/assets/reward-dining.jpg', 'クラフトビール瓶と食事、食事券のセット', 'https://www.yagiribrewery.com/items/155702823'],
-  ['80,000円', 'イベント', '出張タップ 15L樽×2本', '3', '/assets/reward-event-tap.jpg', '出張用の二口ビールタップと15リットル樽2本', 'https://www.yagiribrewery.com/items/155702966'],
-  ['100,000円', '一緒につくる', 'オリジナルビール醸造権＋ネーミングライツ', '2', '/assets/reward-brew-day.jpg', '麦芽とホップを確認しながらビールを仕込む様子', 'https://www.yagiribrewery.com/items/155703259'],
-  ['300,000円', 'バッチオーナー', 'ケグ納品 15Lワンウェイ樽×11本', '1', '/assets/reward-keg-lot.jpg', '納品用に並べたクラフトビール樽11本', 'https://www.yagiribrewery.com/items/155703648'],
-  ['380,000円', 'バッチオーナー', '瓶納品 約500本', '1', '/assets/reward-bottle-lot.jpg', '約500本分のクラフトビールを梱包したケース', 'https://www.yagiribrewery.com/items/155705721'],
+  ['3,000円', '応援枠', 'オリジナルステッカー／タップルーム1杯無料券', '40', '/assets/reward-3000.png', '3,000円 応援枠 ステッカーとタップルーム1杯無料券のリターン案内', 'https://www.yagiribrewery.com/items/155698632'],
+  ['5,000円', '早割', '瓶ビール6本', '30', '/assets/reward-5000.png', '5,000円 早割 瓶ビール6本のリターン案内', 'https://www.yagiribrewery.com/items/155699333'],
+  ['6,000円', 'ビールで応援', '瓶ビール6本', '80', '/assets/reward-6000.png', '6,000円 ビールで応援 瓶ビール6本のリターン案内', 'https://www.yagiribrewery.com/items/155699770'],
+  ['12,000円', 'ビールで応援', '瓶ビール12本', '30', '/assets/reward-12000.png', '12,000円 ビールで応援 瓶ビール12本のリターン案内', 'https://www.yagiribrewery.com/items/155699896'],
+  ['15,000円', '贈る応援', 'オリジナルラベル瓶ビール6本', '15', '/assets/reward-15000.png', '15,000円 贈る応援 オリジナルラベル瓶ビール6本のリターン案内', 'https://www.yagiribrewery.com/items/155700597'],
+  ['20,000円', '醸造所を体験', '醸造所見学プラン 1組2名', '15', '/assets/reward-20000.png', '20,000円 醸造所を体験 醸造所見学プランのリターン案内', 'https://www.yagiribrewery.com/items/155702192'],
+  ['22,000円', '贈る応援', '完全オリジナルラベル瓶ビール6本', '5', '/assets/reward-22000.png', '22,000円 贈る応援 完全オリジナルラベル瓶ビール6本のリターン案内', 'https://www.yagiribrewery.com/items/155701267'],
+  ['25,000円', 'お店で応援', '瓶ビール6本＋お食事券10,000円分', '12', '/assets/reward-25000.png', '25,000円 お店で応援 瓶ビール6本とお食事券10,000円分のリターン案内', 'https://www.yagiribrewery.com/items/155702722'],
+  ['40,000円', 'お店で応援', '瓶ビール12本＋お食事券20,000円分', '8', '/assets/reward-40000.png', '40,000円 お店で応援 瓶ビール12本とお食事券20,000円分のリターン案内', 'https://www.yagiribrewery.com/items/155702823'],
+  ['80,000円', 'イベント', '出張タップ 15L樽×2本', '3', '/assets/reward-80000.png', '80,000円 イベント 出張タップと15L樽2本のリターン案内', 'https://www.yagiribrewery.com/items/155702966'],
+  ['100,000円', '一緒につくる', 'オリジナルビール醸造権＋ネーミングライツ', '2', '/assets/reward-100000.png', '100,000円 一緒につくる オリジナルビール醸造権とネーミングライツのリターン案内', 'https://www.yagiribrewery.com/items/155703259'],
+  ['300,000円', 'バッチオーナー', 'ケグ納品 15Lワンウェイ樽×11本', '1', '/assets/reward-300000.png', '300,000円 バッチオーナー 15Lワンウェイ樽11本納品のリターン案内', 'https://www.yagiribrewery.com/items/155703648'],
+  ['380,000円', 'バッチオーナー', '瓶納品 約500本', '1', '/assets/reward-380000.png', '380,000円 バッチオーナー 瓶約500本納品のリターン案内', 'https://www.yagiribrewery.com/items/155705721'],
 ];
 
 const gallery = [
@@ -234,9 +234,6 @@ export function App() {
       <div className="reward-list">
         {rewards.map(([price, kind, title, left, image, alt, url]) => <article key={price + title}>
           <img className="reward-image" src={image} alt={alt} />
-          <small className="reward-kind">{kind}</small>
-          <strong className="reward-price">{price}</strong>
-          <b className="reward-title">{title}</b>
           <ul className="reward-meta">
             <li>残り {left}口</li>
             <li>2027年1月以降お届け予定</li>
