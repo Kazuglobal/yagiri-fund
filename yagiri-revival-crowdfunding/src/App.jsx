@@ -23,10 +23,10 @@ const gallery = [
 ];
 
 const featured = [
-  ['ビールで応援する', '再開後の初仕込みビールを、6本まとめてご自宅へ。', '6,000円〜', '/assets/brewery-before.webp'],
-  ['醸造所を体験する', '普段は入れない仕込みの現場に、1組2名でご案内。', '20,000円', '/assets/watanabe-ishida-team.png'],
-  ['お店で乾杯する', '瓶ビール6本と、お食事券10,000円分。店で会いましょう。', '25,000円〜', '/assets/taproom-toast.png'],
-  ['特別な一本を贈る', '名前や記念日を刻んだ、世界に一つのラベルで。', '15,000円〜', '/assets/brewery-before.webp'],
+  ['ビールで応援する', '再開後の初仕込みビールを、6本まとめてご自宅へ。', '6,000円〜', '/assets/reward-6000.png'],
+  ['醸造所を体験する', '普段は入れない仕込みの現場に、1組2名でご案内。', '20,000円', '/assets/reward-20000.png'],
+  ['お店で乾杯する', '瓶ビール6本と、お食事券10,000円分。店で会いましょう。', '25,000円〜', '/assets/reward-25000.png'],
+  ['特別な一本を贈る', '名前や記念日を刻んだ、世界に一つのラベルで。', '15,000円〜', '/assets/reward-15000.png'],
 ];
 
 export function App() {
@@ -222,7 +222,7 @@ export function App() {
       <header><p className="section-label">応援のかたち</p><h2><span className="ln">いただいた応援は、</span><span className="ln">一杯になってお返しします。</span></h2><p>ビールで、醸造所で、お店で。4つの応援のかたちをご用意しました。</p></header>
       <div className="featured-grid">
         {featured.map(([title, copy, price, image]) => <button key={title} onClick={go} className="featured-card">
-          <img src={image} alt="" />
+          <img src={image} alt={`${title}（${price}）のリターン案内`} />
           <span><b>{title}</b><small>{copy}</small><strong>{price}</strong></span>
         </button>)}
       </div>

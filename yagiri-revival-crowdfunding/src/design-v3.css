@@ -84,3 +84,8 @@
 .primary:focus-visible,.reward-list article button:focus-visible,.reward-list article .reward-cta:focus-visible,.text-link:focus-visible{
   outline:3px solid var(--black);outline-offset:3px}
 .support-bar .primary:focus-visible{outline-color:#fff}
+
+/* ---------- featured cards use square reward-card artwork ---------- */
+.featured-card img{width:100%;height:auto;aspect-ratio:1;object-fit:contain;
+  background:#fff;border-bottom:1px solid var(--line);filter:none}
+@media(max-width:620px){.featured-card img{height:auto}}
