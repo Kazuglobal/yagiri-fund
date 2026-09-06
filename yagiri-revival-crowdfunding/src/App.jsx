@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 
 const rewards = [
-  ['3,000円', '応援枠', 'オリジナルステッカー／タップルーム1杯無料券', '40', '/assets/reward-support.jpg', 'ステッカーとドリンク券、クラフトビールのイメージ', 'https://www.yagiribrewery.com/items/155698632'],
-  ['5,000円', '早割', '瓶ビール6本', '30', '/assets/reward-beer-6.jpg', '琥珀色のクラフトビール瓶6本', 'https://www.yagiribrewery.com/items/155699333'],
-  ['6,000円', 'ビールで応援', '瓶ビール6本', '80', '/assets/reward-beer-6.jpg', '琥珀色のクラフトビール瓶6本', 'https://www.yagiribrewery.com/items/155699770'],
-  ['12,000円', 'ビールで応援', '瓶ビール12本', '30', '/assets/reward-beer-12.jpg', '箱に収めたクラフトビール瓶12本', 'https://www.yagiribrewery.com/items/155699896'],
-  ['15,000円', '贈る応援', 'オリジナルラベル瓶ビール6本', '15', '/assets/reward-custom-label.jpg', 'オリジナルラベルを付けたクラフトビールのギフト', 'https://www.yagiribrewery.com/items/155700597'],
-  ['20,000円', '醸造所を体験', '醸造所見学プラン 1組2名', '15', '/assets/reward-brewery-tour.jpg', '醸造設備を見学する二人と案内する醸造家', 'https://www.yagiribrewery.com/items/155702192'],
-  ['22,000円', '贈る応援', '完全オリジナルラベル瓶ビール6本', '5', '/assets/reward-custom-label.jpg', 'オリジナルラベルを付けたクラフトビールのギフト', 'https://www.yagiribrewery.com/items/155701267'],
-  ['25,000円', 'お店で応援', '瓶ビール6本＋お食事券10,000円分', '12', '/assets/reward-dining.jpg', 'クラフトビール瓶と食事、食事券のセット', 'https://www.yagiribrewery.com/items/155702722'],
-  ['40,000円', 'お店で応援', '瓶ビール12本＋お食事券20,000円分', '8', '/assets/reward-dining.jpg', 'クラフトビール瓶と食事、食事券のセット', 'https://www.yagiribrewery.com/items/155702823'],
-  ['80,000円', 'イベント', '出張タップ 15L樽×2本', '3', '/assets/reward-event-tap.jpg', '出張用の二口ビールタップと15リットル樽2本', 'https://www.yagiribrewery.com/items/155702966'],
-  ['100,000円', '一緒につくる', 'オリジナルビール醸造権＋ネーミングライツ', '2', '/assets/reward-brew-day.jpg', '麦芽とホップを確認しながらビールを仕込む様子', 'https://www.yagiribrewery.com/items/155703259'],
-  ['300,000円', 'バッチオーナー', 'ケグ納品 15Lワンウェイ樽×11本', '1', '/assets/reward-keg-lot.jpg', '納品用に並べたクラフトビール樽11本', 'https://www.yagiribrewery.com/items/155703648'],
-  ['380,000円', 'バッチオーナー', '瓶納品 約500本', '1', '/assets/reward-bottle-lot.jpg', '約500本分のクラフトビールを梱包したケース', 'https://www.yagiribrewery.com/items/155705721'],
+  ['3,000円', '応援枠', 'オリジナルステッカー／タップルーム1杯無料券', '40', '/assets/reward-3000.png', '3,000円 応援枠 ステッカーとタップルーム1杯無料券のリターン案内', 'https://www.yagiribrewery.com/items/155698632'],
+  ['5,000円', '早割', '瓶ビール6本', '30', '/assets/reward-5000.png', '5,000円 早割 瓶ビール6本のリターン案内', 'https://www.yagiribrewery.com/items/155699333'],
+  ['6,000円', 'ビールで応援', '瓶ビール6本', '80', '/assets/reward-6000.png', '6,000円 ビールで応援 瓶ビール6本のリターン案内', 'https://www.yagiribrewery.com/items/155699770'],
+  ['12,000円', 'ビールで応援', '瓶ビール12本', '30', '/assets/reward-12000.png', '12,000円 ビールで応援 瓶ビール12本のリターン案内', 'https://www.yagiribrewery.com/items/155699896'],
+  ['15,000円', '贈る応援', 'オリジナルラベル瓶ビール6本', '15', '/assets/reward-15000.png', '15,000円 贈る応援 オリジナルラベル瓶ビール6本のリターン案内', 'https://www.yagiribrewery.com/items/155700597'],
+  ['20,000円', '醸造所を体験', '醸造所見学プラン 1組2名', '15', '/assets/reward-20000.png', '20,000円 醸造所を体験 醸造所見学プランのリターン案内', 'https://www.yagiribrewery.com/items/155702192'],
+  ['22,000円', '贈る応援', '完全オリジナルラベル瓶ビール6本', '5', '/assets/reward-22000.png', '22,000円 贈る応援 完全オリジナルラベル瓶ビール6本のリターン案内', 'https://www.yagiribrewery.com/items/155701267'],
+  ['25,000円', 'お店で応援', '瓶ビール6本＋お食事券10,000円分', '12', '/assets/reward-25000.png', '25,000円 お店で応援 瓶ビール6本とお食事券10,000円分のリターン案内', 'https://www.yagiribrewery.com/items/155702722'],
+  ['40,000円', 'お店で応援', '瓶ビール12本＋お食事券20,000円分', '8', '/assets/reward-40000.png', '40,000円 お店で応援 瓶ビール12本とお食事券20,000円分のリターン案内', 'https://www.yagiribrewery.com/items/155702823'],
+  ['80,000円', 'イベント', '出張タップ 15L樽×2本', '3', '/assets/reward-80000.png', '80,000円 イベント 出張タップと15L樽2本のリターン案内', 'https://www.yagiribrewery.com/items/155702966'],
+  ['100,000円', '一緒につくる', 'オリジナルビール醸造権＋ネーミングライツ', '2', '/assets/reward-100000.png', '100,000円 一緒につくる オリジナルビール醸造権とネーミングライツのリターン案内', 'https://www.yagiribrewery.com/items/155703259'],
+  ['300,000円', 'バッチオーナー', 'ケグ納品 15Lワンウェイ樽×11本', '1', '/assets/reward-300000.png', '300,000円 バッチオーナー 15Lワンウェイ樽11本納品のリターン案内', 'https://www.yagiribrewery.com/items/155703648'],
+  ['380,000円', 'バッチオーナー', '瓶納品 約500本', '1', '/assets/reward-380000.png', '380,000円 バッチオーナー 瓶約500本納品のリターン案内', 'https://www.yagiribrewery.com/items/155705721'],
 ];
 
 const gallery = [
@@ -23,10 +23,10 @@ const gallery = [
 ];
 
 const featured = [
-  ['ビールで応援する', '再開後の初仕込みビールを、6本まとめてご自宅へ。', '6,000円〜', '/assets/brewery-before.webp'],
-  ['醸造所を体験する', '普段は入れない仕込みの現場に、1組2名でご案内。', '20,000円', '/assets/watanabe-ishida-team.png'],
-  ['お店で乾杯する', '瓶ビール6本と、お食事券10,000円分。店で会いましょう。', '25,000円〜', '/assets/taproom-toast.png'],
-  ['特別な一本を贈る', '名前や記念日を刻んだ、世界に一つのラベルで。', '15,000円〜', '/assets/brewery-before.webp'],
+  ['ビールで応援する', '再開後の初仕込みビールを、6本まとめてご自宅へ。', '6,000円〜', '/assets/reward-6000.png'],
+  ['醸造所を体験する', '普段は入れない仕込みの現場に、1組2名でご案内。', '20,000円', '/assets/reward-20000.png'],
+  ['お店で乾杯する', '瓶ビール6本と、お食事券10,000円分。店で会いましょう。', '25,000円〜', '/assets/reward-25000.png'],
+  ['特別な一本を贈る', '名前や記念日を刻んだ、世界に一つのラベルで。', '15,000円〜', '/assets/reward-15000.png'],
 ];
 
 export function App() {
@@ -112,6 +112,7 @@ export function App() {
             <div><dt>ネクストゴール</dt><dd>2,000,000<span>円</span></dd></div>
           </dl>
           <p className="fund-goal-note">ネクストゴールは、次の豪雨で二度と止めないための設備に充てます。</p>
+          <p className="fund-allin"><b>All-in方式</b>目標金額に届かなかった場合も、集まった金額で復旧を進めます。ご注文は成立し、リターンは必ずお届けします。</p>
           <button className="primary" onClick={go}>このプロジェクトを支援する</button>
           <p className="fund-note">「—」は公開時に実績値へ差し替えます。</p>
         </aside>
@@ -222,7 +223,7 @@ export function App() {
       <header><p className="section-label">応援のかたち</p><h2><span className="ln">いただいた応援は、</span><span className="ln">一杯になってお返しします。</span></h2><p>ビールで、醸造所で、お店で。4つの応援のかたちをご用意しました。</p></header>
       <div className="featured-grid">
         {featured.map(([title, copy, price, image]) => <button key={title} onClick={go} className="featured-card">
-          <img src={image} alt="" />
+          <img src={image} alt={`${title}（${price}）のリターン案内`} />
           <span><b>{title}</b><small>{copy}</small><strong>{price}</strong></span>
         </button>)}
       </div>
@@ -230,13 +231,10 @@ export function App() {
     </section>
 
     <section id="returns" className="returns section">
-      <header><p className="section-label">リターン一覧</p><h2><span className="ln">3,000円から、</span><span className="ln">再開への一歩を支えていただけます。</span></h2><p>発送は2027年1月以降の予定です。お酒を含むリターンは20歳以上の方に限ります。</p></header>
+      <header><p className="section-label">リターン一覧</p><h2><span className="ln">3,000円から、</span><span className="ln">再開への一歩を支えていただけます。</span></h2><p>All-in方式のため、目標未達でもご注文は成立します。発送は2027年1月以降の予定です。お酒を含むリターンは20歳以上の方に限ります。</p></header>
       <div className="reward-list">
         {rewards.map(([price, kind, title, left, image, alt, url]) => <article key={price + title}>
           <img className="reward-image" src={image} alt={alt} />
-          <small className="reward-kind">{kind}</small>
-          <strong className="reward-price">{price}</strong>
-          <b className="reward-title">{title}</b>
           <ul className="reward-meta">
             <li>残り {left}口</li>
             <li>2027年1月以降お届け予定</li>
@@ -324,11 +322,14 @@ export function App() {
     <section id="faq" className="guide section">
       <p className="section-label">支援に関するご案内</p>
       <div>
+        <article><b>All-in方式です</b><p>目標金額に到達しなかった場合も、集まった金額で復旧を進めます。目標未達を理由としたご注文の取り消し・返金は行いません。</p></article>
+        <article><b>キャンセル・返品</b><p>ご注文確定後のお客様都合によるキャンセル・返品はお受けできません。商品に欠陥があった場合はお取り替えいたします。</p></article>
+        <article><b>お支払いのタイミング</b><p>ご注文確定時にお支払いが確定します。目標金額の達成を待って決済されるものではありません。</p></article>
+        <article><b>発送について</b><p>瓶の発送は6本単位です。発送は2027年1月以降を予定しており、復旧の進捗により前後する場合があります。最新状況は活動報告でお知らせします。</p></article>
         <article><b>お食事券・1杯無料券</b><p>有効期限は発行から1年です。現金との引き換えはできません。</p></article>
         <article><b>オリジナルビールの制作</b><p>品質担保のため、最終的な醸造レシピの決定・調整はブルワリーにお任せいただく形となります。副原料は取り扱い実績のある範囲でのご相談となります。</p></article>
-        <article><b>発送について</b><p>瓶の発送は6本単位です。復旧の進捗により発送時期が前後する場合があります。</p></article>
       </div>
-      <p className="legal">20歳未満の方の飲酒は法律で禁止されています。有償で提供する場合は、支援者様側に酒類販売業免許が必要です。</p>
+      <p className="legal">20歳未満の方の飲酒は法律で禁止されています。20歳未満の方はお酒を含むリターンをご購入いただけません。リターンのお酒を有償で第三者に提供する場合は、支援者様側に酒類販売業免許が必要です。<br />ご注文・決済は矢切ブルワリー公式オンラインショップで行われます。事業者情報・お支払い方法・返品条件の詳細は<a href="https://www.yagiribrewery.com/law" target="_blank" rel="noopener noreferrer">特定商取引法に基づく表記</a>をご確認ください。</p>
     </section>
 
     <section className="closing section">
