@@ -112,15 +112,31 @@
 /* the festival group shot sits high in a 3:4 frame — keep faces in the crop */
 .people-media .people-fest img{object-position:center 38%}
 
-/* ---------- hero thumbnails sit directly under the hero photo ---------- */
-/* They used to float at the bottom-left of the whole hero, under the copy
-   column, where the link to the photo they switch was not obvious. */
+/* ---------- hero: photo, dashboard card, thumbnails ---------- */
+/* The thumbnails used to float at the bottom-left of the whole hero, under the
+   copy column, far from the photo they switch. They now sit under the photo.
+   The dashboard card overlays the photo, but the card had outgrown it: it stuck
+   out above the photo and left a bare strip of photo down its right side. The
+   photo now shares a grid cell with the card, so it stretches to whatever the
+   card needs and the card keeps an even inset on every side. */
 @media(min-width:961px){
   .hero{padding-bottom:clamp(40px,4vw,60px)}
-  .hero-visual{height:auto;display:flex;flex-direction:column}
-  .hero-visual>img{height:clamp(420px,43vw,584px);flex:none}
-  .hero-thumbs{position:static;left:auto;bottom:auto;margin-top:10px}
-  /* the fund card is anchored to hero-visual's bottom, which now includes the
-     thumbnails — lift it back so it stays flush with the photo */
-  .fund-card{bottom:calc(clamp(62px,5.8vw,86px) + 14px)}
+  .hero-visual{height:auto;display:grid;grid-template-columns:minmax(0,1fr)}
+  /* replaced elements default to `normal` = start, not stretch, in grid */
+  .hero-visual>img{grid-area:1/1;height:auto;min-height:clamp(420px,43vw,584px);
+    align-self:stretch;justify-self:stretch}
+  .fund-card{grid-area:1/1;position:relative;top:auto;right:auto;bottom:auto;
+    justify-self:end;align-self:end;margin:clamp(22px,2.2vw,34px);
+    width:clamp(256px,21vw,310px)}
+  .hero-thumbs{grid-area:2/1;position:static;left:auto;bottom:auto;margin-top:10px}
+}
+
+/* on narrow screens everything stacks: photo, then the thumbnails that switch
+   it, then the dashboard — the thumbnails belong with the photo, not below the
+   support button */
+@media(max-width:960px){
+  .hero-visual{display:flex;flex-direction:column}
+  .hero-visual>img{order:1;margin-bottom:0}
+  .hero-thumbs{order:2;padding:10px clamp(18px,4vw,28px) 0}
+  .fund-card{order:3;margin-top:clamp(20px,3.4vw,28px)}
 }
