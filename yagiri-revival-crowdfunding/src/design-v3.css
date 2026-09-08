@@ -95,3 +95,48 @@
   font-size:10px;line-height:1.75;color:#555}
 .fund-allin b{display:block;font-size:10.5px;letter-spacing:.06em;color:var(--gold);margin-bottom:3px}
 .guide .legal a{color:var(--orange);text-decoration:underline}
+
+/* ---------- taproom gallery (story section) ---------- */
+.taproom{margin-top:clamp(44px,5.2vw,78px);padding-top:clamp(38px,4.4vw,64px);
+  border-top:1px solid var(--line)}
+.taproom-head{max-width:760px;margin:0 0 clamp(24px,2.8vw,38px)}
+.taproom-head h3{font-family:'Noto Serif JP',serif;font-size:clamp(21px,2.4vw,30px);font-weight:500;
+  line-height:1.75;letter-spacing:.045em;margin:14px 0 20px}
+.taproom-head p{font-size:14px;line-height:2.15;margin:0}
+.taproom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.taproom-grid figure{margin:0;min-width:0}
+.taproom-grid img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
+.taproom-grid figcaption{margin-top:9px;font-size:10px;line-height:1.65;color:#73777a}
+@media(max-width:760px){.taproom-grid{grid-template-columns:1fr 1fr;gap:10px}}
+
+/* the festival group shot sits high in a 3:4 frame — keep faces in the crop */
+.people-media .people-fest img{object-position:center 38%}
+
+/* ---------- hero: photo, dashboard card, thumbnails ---------- */
+/* The thumbnails used to float at the bottom-left of the whole hero, under the
+   copy column, far from the photo they switch. They now sit under the photo.
+   The dashboard card overlays the photo, but the card had outgrown it: it stuck
+   out above the photo and left a bare strip of photo down its right side. The
+   photo now shares a grid cell with the card, so it stretches to whatever the
+   card needs and the card keeps an even inset on every side. */
+@media(min-width:961px){
+  .hero{padding-bottom:clamp(40px,4vw,60px)}
+  .hero-visual{height:auto;display:grid;grid-template-columns:minmax(0,1fr)}
+  /* replaced elements default to `normal` = start, not stretch, in grid */
+  .hero-visual>img{grid-area:1/1;height:auto;min-height:clamp(420px,43vw,584px);
+    align-self:stretch;justify-self:stretch}
+  .fund-card{grid-area:1/1;position:relative;top:auto;right:auto;bottom:auto;
+    justify-self:end;align-self:end;margin:clamp(22px,2.2vw,34px);
+    width:clamp(256px,21vw,310px)}
+  .hero-thumbs{grid-area:2/1;position:static;left:auto;bottom:auto;margin-top:10px}
+}
+
+/* on narrow screens everything stacks: photo, then the thumbnails that switch
+   it, then the dashboard — the thumbnails belong with the photo, not below the
+   support button */
+@media(max-width:960px){
+  .hero-visual{display:flex;flex-direction:column}
+  .hero-visual>img{order:1;margin-bottom:0}
+  .hero-thumbs{order:2;padding:10px clamp(18px,4vw,28px) 0}
+  .fund-card{order:3;margin-top:clamp(20px,3.4vw,28px)}
+}

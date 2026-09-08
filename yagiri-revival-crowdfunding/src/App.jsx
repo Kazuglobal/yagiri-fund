@@ -116,9 +116,9 @@ export function App() {
           <button className="primary" onClick={go}>このプロジェクトを支援する</button>
           <p className="fund-note">「—」は公開時に実績値へ差し替えます。</p>
         </aside>
-      </div>
-      <div className="hero-thumbs">
-        {gallery.map(([src, alt], index) => <button key={src} className={index === photo ? 'active' : ''} onClick={() => setPhoto(index)} aria-label={alt}><img src={src} alt="" /></button>)}
+        <div className="hero-thumbs">
+          {gallery.map(([src, alt], index) => <button key={src} className={index === photo ? 'active' : ''} onClick={() => setPhoto(index)} aria-label={alt} aria-pressed={index === photo}><img src={src} alt="" /></button>)}
+        </div>
       </div>
     </section>
 
@@ -144,6 +144,21 @@ export function App() {
           <figure><img src="/assets/flood-waterline.webp" alt="外壁と窓に残った屋外の水位の跡" /><figcaption>外壁と窓に残った、屋外の水位の跡。</figcaption></figure>
         </div>
       </div>
+      </div>
+      <div className="taproom">
+        <div className="taproom-head">
+          <p className="section-label">矢切のタップルーム</p>
+          <h3><span className="ln">飲みに来た人が、矢切を</span><span className="ln">知って帰る場所があります。</span></h3>
+          <p>「YAGIRIYA」は、クラフトビールとアメリカンヴィンテージが同居するパブリックハウスです。ヴィンテージショップ CANDY STORE ROCK と一緒に店をつくっていて、50年代のジュークボックスが鳴るカウンターに、近所の方も遠方から来た方も並びます。ここで一杯飲んだ人が「どこでつくっているんだろう」と興味を持つ。その入口が、この店です。</p>
+        </div>
+        <div className="taproom-grid">
+          <figure><img src="/assets/taproom-exterior.webp" alt="タップルームYAGIRIYAの外観と看板" loading="lazy" /><figcaption>矢切のタップルーム「YAGIRIYA」。ここが入口です。</figcaption></figure>
+          <figure><img src="/assets/taproom-counter.webp" alt="YAGIRIYA店内のカウンターとテーブル席" loading="lazy" /><figcaption>注文はカウンターで。奥までまっすぐ続く、細長い店内。</figcaption></figure>
+          <figure><img src="/assets/taproom-bar.webp" alt="YAGIRIYAのバックバーに並ぶアメリカンヴィンテージの雑貨" loading="lazy" /><figcaption>棚に並ぶのは、集めてきたアメリカンヴィンテージ。</figcaption></figure>
+          <figure><img src="/assets/taproom-seats.webp" alt="YAGIRIYAのテーブル席と壁のコレクション" loading="lazy" /><figcaption>壁のコレクションを眺めながら、ゆっくり飲めるテーブル席。</figcaption></figure>
+          <figure><img src="/assets/taproom-jukebox.webp" alt="店内に置かれた50年代のジュークボックス" loading="lazy" /><figcaption>50年代のジュークボックス。店の音は、ここから鳴ります。</figcaption></figure>
+          <figure><img src="/assets/taproom-terrace.webp" alt="YAGIRIYAのテラス席から見た通り" loading="lazy" /><figcaption>外にはテラス席。天気のいい日は、ここで一杯。</figcaption></figure>
+        </div>
       </div>
     </section>
 
@@ -272,9 +287,9 @@ export function App() {
           <img src="/assets/watanabe-ishida-team.png" alt="矢切ブルワリーの出店ブースに立つ代表の渡辺と醸造担当の石田" />
           <figcaption>代表 渡辺（右）／ 醸造担当 石田（左）</figcaption>
         </figure>
-        <figure>
-          <img src="/assets/taproom-toast.png" alt="地域の方々とクラフトビールで乾杯する様子" />
-          <figcaption>ビールから生まれる、地域のつながり</figcaption>
+        <figure className="people-fest">
+          <img src="/assets/beerfest-team.webp" alt="矢切ビールまつりの現場に集まったスタッフと仲間たち" loading="lazy" />
+          <figcaption>矢切ビールまつりの現場で。ビールから生まれる、地域のつながり</figcaption>
         </figure>
       </div>
       </div>
