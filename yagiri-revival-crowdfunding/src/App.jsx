@@ -116,9 +116,9 @@ export function App() {
           <button className="primary" onClick={go}>このプロジェクトを支援する</button>
           <p className="fund-note">「—」は公開時に実績値へ差し替えます。</p>
         </aside>
-      </div>
-      <div className="hero-thumbs">
-        {gallery.map(([src, alt], index) => <button key={src} className={index === photo ? 'active' : ''} onClick={() => setPhoto(index)} aria-label={alt}><img src={src} alt="" /></button>)}
+        <div className="hero-thumbs">
+          {gallery.map(([src, alt], index) => <button key={src} className={index === photo ? 'active' : ''} onClick={() => setPhoto(index)} aria-label={alt} aria-pressed={index === photo}><img src={src} alt="" /></button>)}
+        </div>
       </div>
     </section>
 
