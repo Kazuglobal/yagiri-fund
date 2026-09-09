@@ -140,3 +140,43 @@
   .hero-thumbs{order:2;padding:10px clamp(18px,4vw,28px) 0}
   .fund-card{order:3;margin-top:clamp(20px,3.4vw,28px)}
 }
+
+/* ---------- 支援に関するご案内 ----------
+   This is the section people read right before they commit money — All-in,
+   cancellation, shipping, expiry dates. It was set smaller than every other
+   block on the page (13px headings, 11px body). It now carries at least the
+   weight of the beliefs cards above it: a real <h2>, the same bordered card
+   grid, and one size up on both the heading and the body copy. */
+.guide{padding-top:clamp(56px,5.6vw,80px);padding-bottom:clamp(56px,5.6vw,80px)}
+.guide-head{max-width:760px;margin:0 0 clamp(26px,2.9vw,40px)}
+.guide-head h2{font-family:'Noto Serif JP',serif;font-size:var(--fs-h2);
+  font-weight:500;line-height:1.5;letter-spacing:.02em;margin:0;color:var(--black)}
+.guide>div{grid-template-columns:repeat(3,1fr);gap:0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.guide>div article{padding:28px 32px;border-left:1px solid var(--line)}
+.guide>div article:nth-child(3n+1){border-left:0}
+.guide>div article:nth-child(n+4){border-top:1px solid var(--line)}
+/* one step above --fs-h3, the beliefs-card heading size */
+.guide article b{display:block;font-family:'Noto Serif JP',serif;
+  font-size:clamp(18px,1.6vw,23px);font-weight:500;line-height:1.62;letter-spacing:.02em;
+  margin-bottom:12px;color:var(--black)}
+.guide article p{font-size:var(--fs-body);line-height:2.05;color:#555;margin:0}
+.legal{font-size:12px;line-height:2;color:#555;padding-top:26px;margin-top:34px}
+
+/* scoped to the two-column band: the :nth-child selectors below outrank the
+   plain `.guide>div article` reset in the one-column block, so they must not
+   still be matching down there */
+@media(min-width:621px) and (max-width:960px){
+  .guide>div{grid-template-columns:1fr 1fr}
+  .guide>div article{padding:26px 26px}
+  .guide>div article:nth-child(3n+1){border-left:1px solid var(--line)}
+  .guide>div article:nth-child(odd){border-left:0}
+  .guide>div article:nth-child(n+3){border-top:1px solid var(--line)}
+}
+@media(max-width:620px){
+  .guide>div{grid-template-columns:1fr;gap:0}
+  .guide>div article{border-left:0;padding:24px 0}
+  .guide>div article:nth-child(n+2){border-top:1px solid var(--line)}
+  .guide>div article:first-child{border-top:0}
+  .guide article b{font-size:18px}
+}

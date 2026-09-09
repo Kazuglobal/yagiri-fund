@@ -335,7 +335,7 @@ export function App() {
     </section>
 
     <section id="faq" className="guide section">
-      <p className="section-label">支援に関するご案内</p>
+      <header className="guide-head"><h2>支援に関するご案内</h2></header>
       <div>
         <article><b>All-in方式です</b><p>目標金額に到達しなかった場合も、集まった金額で復旧を進めます。目標未達を理由としたご注文の取り消し・返金は行いません。</p></article>
         <article><b>キャンセル・返品</b><p>ご注文確定後のお客様都合によるキャンセル・返品はお受けできません。商品に欠陥があった場合はお取り替えいたします。</p></article>
