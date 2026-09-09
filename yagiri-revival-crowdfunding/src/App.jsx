@@ -82,7 +82,7 @@ export function App() {
         <ul className="hero-tags"><li>#クラフトビール</li><li>#千葉・松戸</li><li>#矢切</li><li>#豪雨被害からの復旧</li></ul>
       </div>
       <div className="hero-visual">
-        <img src={gallery[photo][0]} alt={gallery[photo][1]} />
+        <img src={gallery[photo][0]} alt={gallery[photo][1]} fetchPriority="high" decoding="async" />
         <aside className="fund-card">
           <div className="fund-total"><small>応援購入総額</small><strong className="tbd">—<span>円</span></strong></div>
           <div
@@ -117,7 +117,7 @@ export function App() {
           <p className="fund-note">「—」は公開時に実績値へ差し替えます。</p>
         </aside>
         <div className="hero-thumbs">
-          {gallery.map(([src, alt], index) => <button key={src} className={index === photo ? 'active' : ''} onClick={() => setPhoto(index)} aria-label={alt} aria-pressed={index === photo}><img src={src} alt="" /></button>)}
+          {gallery.map(([src, alt], index) => <button key={src} className={index === photo ? 'active' : ''} onClick={() => setPhoto(index)} aria-label={alt} aria-pressed={index === photo}><img src={src} alt="" decoding="async" /></button>)}
         </div>
       </div>
     </section>
@@ -136,12 +136,12 @@ export function App() {
       </article>
       <div className="story-media">
         <figure>
-          <img src="/assets/brewery-before.webp" alt="被災前の醸造所内" />
+          <img src="/assets/brewery-before.webp" alt="被災前の醸造所内" loading="lazy" decoding="async" />
           <figcaption>被災前の醸造所。ここで仕込みを重ねてきました。</figcaption>
         </figure>
         <div>
-          <figure><img src="/assets/cleanup-keg.webp" alt="浸水した樽を洗浄する様子" /><figcaption>浸水した樽を一本ずつ洗浄しています。</figcaption></figure>
-          <figure><img src="/assets/flood-waterline.webp" alt="外壁と窓に残った屋外の水位の跡" /><figcaption>外壁と窓に残った、屋外の水位の跡。</figcaption></figure>
+          <figure><img src="/assets/cleanup-keg.webp" alt="浸水した樽を洗浄する様子" loading="lazy" decoding="async" /><figcaption>浸水した樽を一本ずつ洗浄しています。</figcaption></figure>
+          <figure><img src="/assets/flood-waterline.webp" alt="外壁と窓に残った屋外の水位の跡" loading="lazy" decoding="async" /><figcaption>外壁と窓に残った、屋外の水位の跡。</figcaption></figure>
         </div>
       </div>
       </div>
@@ -172,13 +172,13 @@ export function App() {
         <p>敷地に流れ込んだ水は、建物の外壁に高い跡を残しました。醸造所の床にたまった水は約10cm。それでも水圧は、3坪のプレハブ冷蔵庫を押し流して大きく歪ませ、庫内には40cmの泥水がたまりました。中に積んでいた麦芽とホップは、袋のまま泥水をかぶりました。使えなくなった原料は、ビールにしておよそ5,000杯分。仕込むはずだったビールが、たった一晩で消えてしまいました。</p>
       </div>
       <figure className="damage-photo">
-        <img src="/assets/flood-interior-mud.webp" alt="泥水が引いたあとの醸造所内" />
+        <img src="/assets/flood-interior-mud.webp" alt="泥水が引いたあとの醸造所内" loading="lazy" decoding="async" />
         <figcaption>水が引いたあとの醸造所。写真に写らない設備の内側にも、泥は入り込んでいます。</figcaption>
       </figure>
       <div className="damage-documentary" aria-label="被災状況の記録写真">
-        <figure><img src="/assets/flooded-kegs.webp" alt="浸水で倒れた樽" /><figcaption>流され、設備の間に倒れた樽。</figcaption></figure>
-        <figure><img src="/assets/flood-waterline.webp" alt="外壁と窓に残った屋外の浸水ライン" /><figcaption>外壁と窓に残った跡。敷地はこの高さまで水に浸かりました。</figcaption></figure>
-        <figure><img src="/assets/damaged-cold-room.webp" alt="浸水で歪んだプレハブ冷蔵庫" /><figcaption>水に押され、パネルが歪んだプレハブ冷蔵庫。</figcaption></figure>
+        <figure><img src="/assets/flooded-kegs.webp" alt="浸水で倒れた樽" loading="lazy" decoding="async" /><figcaption>流され、設備の間に倒れた樽。</figcaption></figure>
+        <figure><img src="/assets/flood-waterline.webp" alt="外壁と窓に残った屋外の浸水ライン" loading="lazy" decoding="async" /><figcaption>外壁と窓に残った跡。敷地はこの高さまで水に浸かりました。</figcaption></figure>
+        <figure><img src="/assets/damaged-cold-room.webp" alt="浸水で歪んだプレハブ冷蔵庫" loading="lazy" decoding="async" /><figcaption>水に押され、パネルが歪んだプレハブ冷蔵庫。</figcaption></figure>
       </div>
       <div className="damage-details">
         <article>
@@ -228,7 +228,7 @@ export function App() {
         <p className="reach">6,000円のご支援が167人分集まれば、第一目標の100万円に届きます。</p>
       </div>
       <figure className="waterline">
-        <img src="/assets/flood-waterline.webp" alt="プレハブ冷蔵庫の内側に残る浸水の跡" />
+        <img src="/assets/flood-waterline.webp" alt="プレハブ冷蔵庫の内側に残る浸水の跡" loading="lazy" decoding="async" />
         <figcaption><span>冷蔵庫内の浸水</span><strong>40cm</strong></figcaption>
       </figure>
       </div>
@@ -238,7 +238,7 @@ export function App() {
       <header><p className="section-label">応援のかたち</p><h2><span className="ln">いただいた応援は、</span><span className="ln">一杯になってお返しします。</span></h2><p>ビールで、醸造所で、お店で。4つの応援のかたちをご用意しました。</p></header>
       <div className="featured-grid">
         {featured.map(([title, copy, price, image]) => <button key={title} onClick={go} className="featured-card">
-          <img src={image} alt={`${title}（${price}）のリターン案内`} />
+          <img src={image} alt={`${title}（${price}）のリターン案内`} loading="lazy" decoding="async" />
           <span><b>{title}</b><small>{copy}</small><strong>{price}</strong></span>
         </button>)}
       </div>
@@ -249,7 +249,7 @@ export function App() {
       <header><p className="section-label">リターン一覧</p><h2><span className="ln">3,000円から、</span><span className="ln">再開への一歩を支えていただけます。</span></h2><p>All-in方式のため、目標未達でもご注文は成立します。発送は2027年1月以降の予定です。お酒を含むリターンは20歳以上の方に限ります。</p></header>
       <div className="reward-list">
         {rewards.map(([price, kind, title, left, image, alt, url]) => <article key={price + title}>
-          <img className="reward-image" src={image} alt={alt} />
+          <img className="reward-image" src={image} alt={alt} loading="lazy" decoding="async" />
           <ul className="reward-meta">
             <li>残り {left}口</li>
             <li>2027年1月以降お届け予定</li>
@@ -284,7 +284,7 @@ export function App() {
       </article>
       <div className="people-media">
         <figure className="people-portrait">
-          <img src="/assets/watanabe-ishida-team.png" alt="矢切ブルワリーの出店ブースに立つ代表の渡辺と醸造担当の石田" />
+          <img src="/assets/watanabe-ishida-team.png" alt="矢切ブルワリーの出店ブースに立つ代表の渡辺と醸造担当の石田" loading="lazy" decoding="async" />
           <figcaption>代表 渡辺（右）／ 醸造担当 石田（左）</figcaption>
         </figure>
         <figure className="people-fest">
@@ -335,7 +335,7 @@ export function App() {
     </section>
 
     <section id="faq" className="guide section">
-      <p className="section-label">支援に関するご案内</p>
+      <header className="guide-head"><h2>支援に関するご案内</h2></header>
       <div>
         <article><b>All-in方式です</b><p>目標金額に到達しなかった場合も、集まった金額で復旧を進めます。目標未達を理由としたご注文の取り消し・返金は行いません。</p></article>
         <article><b>キャンセル・返品</b><p>ご注文確定後のお客様都合によるキャンセル・返品はお受けできません。商品に欠陥があった場合はお取り替えいたします。</p></article>
@@ -348,7 +348,7 @@ export function App() {
     </section>
 
     <section className="closing section">
-      <img src="/assets/yagiri-river.png" alt="夕暮れの矢切周辺を表現した構成イメージ" />
+      <img src="/assets/yagiri-river.png" alt="夕暮れの矢切周辺を表現した構成イメージ" loading="lazy" decoding="async" />
       <div><h2><span className="ln">次の乾杯を、</span><span className="ln">一緒につくりませんか。</span></h2><p><span className="ln">あなたの温かい一押しが、止まった醸造所を</span><span className="ln">もう一度動かす力になります。</span></p><button className="primary" onClick={go}>このプロジェクトを支援する</button></div>
       <strong>矢切から、また、ビールを。</strong>
     </section>
