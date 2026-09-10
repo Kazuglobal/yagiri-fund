@@ -180,3 +180,713 @@
   .guide>div article:first-child{border-top:0}
   .guide article b{font-size:18px}
 }
+
+/* ============================================================
+   DESIGN LAYER v4 — High-Visibility Hero & First View
+   Faithfully matching Attachment 0 (media_1789015909217.png)
+   ============================================================ */
+
+/* Utility for accessible screen reader headings */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Header responsiveness & mobile menu toggle ---------- */
+.menu-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  width: 42px;
+  height: 42px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 30;
+}
+.menu-toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--navy);
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+@media (max-width: 860px) {
+  .site-header {
+    height: 60px;
+    padding: 0 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid var(--line);
+    transition: transform 0.3s ease;
+  }
+  .site-header.header-scrolled {
+    display: flex;
+    animation: slideDown 0.3s ease forwards;
+  }
+  .site-header nav {
+    display: none;
+  }
+  .menu-toggle {
+    display: flex;
+  }
+  .header-cta {
+    display: none;
+  }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Mobile Nav Modal / Slide-out Panel */
+.mobile-nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 100;
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 0.2s ease;
+}
+
+.mobile-nav-panel {
+  background: #ffffff;
+  width: min(320px, 85vw);
+  height: 100%;
+  padding: 24px 20px;
+  box-shadow: -4px 0 25px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  animation: slideLeft 0.25s ease;
+}
+
+.mobile-nav-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.mobile-nav-top strong {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 18px;
+  color: var(--navy);
+}
+
+.mobile-nav-close-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  color: #555;
+  padding: 4px 8px;
+}
+
+.mobile-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px 0;
+  flex: 1;
+}
+
+.mobile-nav-list a {
+  font-size: 15.5px;
+  font-weight: 500;
+  color: var(--navy);
+  text-decoration: none;
+  padding: 10px 0;
+  border-bottom: 1px solid #f2f2f2;
+  transition: color 0.18s ease;
+}
+
+.mobile-nav-list a:hover {
+  color: var(--orange);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideLeft {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* ---------- 1. Real Photo Hero Stage with CSS Typography ---------- */
+.hero-v4 {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #0a1822;
+}
+
+.hero-v4-stage {
+  position: relative;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #0a1822;
+  height: clamp(260px, 68vw, 340px);
+  min-height: 250px;
+  max-height: 360px;
+}
+
+@media (min-width: 768px) {
+  .hero-v4-stage {
+    height: clamp(400px, 40vw, 520px);
+    min-height: 380px;
+    max-height: 540px;
+  }
+}
+
+.hero-stage-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  opacity: 0;
+  transition: opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1), transform 6s ease-out;
+  transform: scale(1.03);
+}
+
+.hero-stage-bg.active {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 1;
+}
+
+.hero-stage-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 0%, transparent 20%, transparent 80%, rgba(0, 0, 0, 0.2) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Slide pagination dots */
+.hero-slide-dots {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  z-index: 10;
+}
+
+.slide-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.slide-dot.active {
+  width: 20px;
+  border-radius: 999px;
+  background: #f3c010;
+  border-color: #f3c010;
+  box-shadow: 0 1px 6px rgba(243, 192, 16, 0.6);
+}
+
+/* ---------- 2. Dashboard Container ---------- */
+.hero-v4-dashboard {
+  background: #f7f8f9;
+  padding: clamp(12px, 2vw, 30px) clamp(12px, 2.4vw, 28px);
+  border-bottom: 1px solid #e2e5e8;
+}
+
+/* Core Project Intro (Catchphrase & Lead) */
+.hero-project-intro {
+  text-align: center;
+  max-width: 820px;
+  margin: 0 auto clamp(10px, 1.8vw, 18px);
+  padding: 0 clamp(6px, 1.2vw, 14px);
+}
+
+.hero-project-title {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700;
+  font-size: clamp(19.5px, 4.8vw, 32px);
+  line-height: 1.42;
+  color: #0c2338;
+  letter-spacing: 0.035em;
+  margin: 0 0 clamp(8px, 1.3vw, 12px);
+}
+
+.hero-project-title .title-ln {
+  display: block;
+}
+
+.hero-project-title .title-highlight {
+  display: inline-block;
+  background: linear-gradient(transparent 65%, rgba(243, 192, 16, 0.42) 0);
+  padding: 0 4px;
+}
+
+.hero-project-lead {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: clamp(13px, 3.2vw, 16px);
+  font-weight: 500;
+  line-height: 1.68;
+  color: #3e4a54;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.hero-project-lead .lead-ln {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .hero-project-title .title-ln {
+    display: inline;
+  }
+  .hero-project-title .title-ln:first-child::after {
+    content: " ";
+  }
+}
+
+/* Heading: \ 豪雨により、醸造所が大きな被害を受けました / */
+.damage-banner-head {
+  text-align: center;
+  margin-bottom: clamp(8px, 1.4vw, 16px);
+}
+.damage-banner-head p {
+  margin: 0;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: clamp(10.5px, 2.7vw, 18px);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #1a1e21;
+  white-space: nowrap;
+}
+
+/* 4 Damage Cards Grid */
+.damage-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(5px, 1.1vw, 12px);
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.damage-card-item {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.damage-card-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+}
+
+.damage-card-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #222;
+}
+
+.damage-card-img-wrap img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.damage-card-item:hover .damage-card-img-wrap img {
+  transform: scale(1.04);
+}
+
+/* ---------- 3. Prominent Orange Heart CTA Button ---------- */
+.hero-v4-cta-wrap {
+  max-width: 680px;
+  margin: clamp(8px, 1.3vw, 18px) auto clamp(8px, 1.2vw, 16px);
+}
+
+.hero-v4-cta-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #f26522 0%, #c74d02 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: clamp(9px, 1.4vw, 16px) clamp(14px, 2.5vw, 32px);
+  box-shadow: 0 4px 16px rgba(199, 77, 2, 0.32);
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
+}
+
+.hero-v4-cta-btn:hover {
+  background: linear-gradient(135deg, #e05312 0%, #a83c06 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 7px 22px rgba(199, 77, 2, 0.42);
+}
+
+.hero-v4-cta-btn:active {
+  transform: translateY(1px);
+}
+
+.cta-heart-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: clamp(28px, 3.5vw, 36px);
+  height: clamp(28px, 3.5vw, 36px);
+  color: #ffffff;
+}
+
+.cta-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.cta-main-text {
+  font-size: clamp(19.5px, 2.6vw, 28px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+}
+
+.cta-main-text .cta-arrow {
+  margin-left: 6px;
+  font-size: clamp(21px, 2.7vw, 30px);
+  vertical-align: middle;
+}
+
+.cta-sub-text {
+  font-size: clamp(11.5px, 1.3vw, 14px);
+  letter-spacing: 0.03em;
+  opacity: 0.95;
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+/* ---------- 4. Crowdfunding Metrics Display ---------- */
+.fund-v4-status {
+  background: #ffffff;
+  border: 1px solid #e2e5e8;
+  border-radius: 12px;
+  padding: clamp(11px, 1.8vw, 24px) clamp(12px, 2.2vw, 30px);
+  max-width: 860px;
+  margin: 0 auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.fund-v4-figures {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  align-items: center;
+  gap: clamp(10px, 2vw, 20px);
+}
+
+.fund-v4-col {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #eaeaea;
+  padding-right: 10px;
+}
+.fund-v4-col:nth-child(3) {
+  border-right: none;
+}
+
+.fund-col-label {
+  font-size: clamp(11.5px, 1.25vw, 13.5px);
+  color: #6c757d;
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+}
+
+.fund-col-val {
+  font-size: clamp(21px, 2.5vw, 30px);
+  font-weight: 700;
+  color: #1a1e21;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.fund-col-val.accent {
+  color: #111111;
+}
+
+.fund-unit {
+  font-size: clamp(12.5px, 1.35vw, 15.5px);
+  font-weight: 500;
+  margin-left: 2px;
+}
+
+/* Yellow circular badge: 目標金額 1,000,000円 挑戦スタート！ */
+.fund-v4-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f7ca18;
+  color: #1a1e21;
+  border-radius: 50%;
+  width: clamp(76px, 8.8vw, 98px);
+  height: clamp(76px, 8.8vw, 98px);
+  box-shadow: 0 3px 10px rgba(247, 202, 24, 0.35);
+  text-align: center;
+  flex-shrink: 0;
+  line-height: 1.15;
+}
+
+.fund-v4-badge .badge-sub {
+  font-size: clamp(9px, 1vw, 11px);
+  font-weight: 700;
+}
+
+.fund-v4-badge .badge-amount {
+  font-size: clamp(12.5px, 1.4vw, 15.5px);
+  font-weight: 800;
+  margin: 1px 0;
+}
+
+.fund-v4-badge .badge-amount small {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* Progress bar */
+.fund-v4-progress-wrap {
+  margin-top: 14px;
+}
+
+.fund-v4-progress-bar {
+  height: clamp(12px, 1.4vw, 16px);
+  background: #e9ecef;
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.fund-v4-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #e82c3c 0%, #f0821d 100%);
+  border-radius: 999px;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fund-v4-date {
+  text-align: right;
+  font-size: 11px;
+  color: #888888;
+  margin: 6px 0 0;
+}
+
+/* Mobile adjustments for dashboard */
+@media (max-width: 580px) {
+  .fund-v4-status {
+    padding: 12px 10px 10px;
+    border-radius: 12px;
+  }
+  .fund-v4-figures {
+    grid-template-columns: 1fr 1.12fr 0.88fr auto;
+    gap: 4px;
+    position: static;
+    padding-right: 0;
+  }
+  .fund-v4-col {
+    padding-right: 4px;
+    border-right: 1px solid #eaeaea;
+  }
+  .fund-v4-col:nth-child(3) {
+    border-right: none;
+  }
+  .fund-col-label {
+    font-size: 8px;
+    white-space: nowrap;
+    margin-bottom: 2px;
+  }
+  .fund-col-val {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .fund-unit {
+    font-size: 8.5px;
+  }
+  .fund-v4-badge {
+    position: static;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    padding: 2px;
+    box-shadow: 0 2px 8px rgba(247, 202, 24, 0.3);
+  }
+  .fund-v4-badge .badge-sub {
+    font-size: 7.5px;
+  }
+  .fund-v4-badge .badge-amount {
+    font-size: 10px;
+  }
+  .fund-v4-badge .badge-amount small {
+    font-size: 8px;
+  }
+  .fund-v4-progress-wrap {
+    margin-top: 8px;
+  }
+  .fund-v4-progress-bar {
+    height: 10px;
+  }
+  .fund-v4-date {
+    font-size: 9.5px;
+    margin-top: 4px;
+  }
+}
+
+/* ---------- 5. Toast Transition Banner ---------- */
+.hero-v4-toast-banner {
+  position: relative;
+  width: 100%;
+  background-color: #14181a;
+  background-image: linear-gradient(rgba(10, 15, 18, 0.45), rgba(10, 15, 18, 0.52)), url('/assets/taproom-toast.webp');
+  background-size: cover;
+  background-position: center 30%;
+  padding: clamp(48px, 6.5vw, 84px) 24px clamp(36px, 5vw, 60px);
+  text-align: center;
+  color: #ffffff;
+}
+
+.toast-banner-content {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.toast-brush-lead {
+  font-family: 'Yuji Boku', 'Noto Serif JP', serif;
+  font-size: clamp(22px, 3.4vw, 38px);
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.05em;
+  margin: 0 0 14px;
+  color: #fdfbf7;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+.toast-sub-lead {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: clamp(13px, 1.6vw, 17px);
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0 0 clamp(24px, 3.5vw, 40px);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+.toast-scroll-prompt {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  gap: 2px;
+}
+
+.toast-scroll-prompt:hover {
+  color: #ffffff;
+  transform: translateY(3px);
+}
+
+.toast-scroll-prompt .scroll-arrow {
+  font-size: 20px;
+  line-height: 1;
+  animation: bounceDown 1.8s infinite;
+}
+
+.toast-scroll-prompt .scroll-text {
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+.mobile-only {
+  display: none;
+}
+@media (max-width: 600px) {
+  .mobile-only {
+    display: inline;
+  }
+}
+
+/* Fix mobile line breaks for damage section heading */
+.damage-story h2 {
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+}
+
+.damage-story h2 .ln {
+  display: block;
+}
+
+@media (max-width: 680px) {
+  .damage-story h2 {
+    font-size: clamp(19px, 5.4vw, 25px) !important;
+    line-height: 1.5 !important;
+  }
+  .damage-story h2 .ln {
+    display: block;
+    white-space: nowrap;
+    overflow: visible;
+  }
+}
+

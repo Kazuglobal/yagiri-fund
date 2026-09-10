@@ -29,9 +29,30 @@ const featured = [
   ['特別な一本を贈る', '名前や記念日を刻んだ、世界に一つのラベルで。', '15,000円〜', '/assets/reward-15000.png'],
 ];
 
+const heroSlides = [
+  { src: '/assets/shop_entrance.webp', alt: '矢切ブルワリー YAGIRIYA 店舗外観' },
+  { src: '/assets/slide_flooded_kegs.webp', alt: '浸水で倒れ散乱したビール樽と醸造設備' },
+  { src: '/assets/damage_tanks.webp', alt: '大切な醸造設備が浸水' },
+  { src: '/assets/slide_mud_floor.webp', alt: '泥水が引いたあとの醸造所の床' },
+  { src: '/assets/slide_flood_waterline.webp', alt: '外壁と窓に残った浸水水位の跡' },
+  { src: '/assets/slide_damaged_coldroom.webp', alt: '水圧で歪んだプレハブ冷蔵庫' },
+  { src: '/assets/damage_floor.webp', alt: '床上約40cmの浸水被害' },
+  { src: '/assets/damage_kegs.webp', alt: '約5,000杯分の原料・ケグの被害' },
+  { src: '/assets/taproom-bar.webp', alt: 'アメリカンヴィンテージのタップルーム店内' },
+  { src: '/assets/patrons_cheer.webp', alt: '賑わう店内とお客様の笑顔' },
+];
+
 export function App() {
   const [photo, setPhoto] = useState(0);
+  const [slideIndex, setSlideIndex] = useState(0);
   const [showBar, setShowBar] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSlideIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 3800);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const scrollToHash = () => {
@@ -57,67 +78,163 @@ export function App() {
     observer.observe(hero);
     return () => observer.disconnect();
   }, []);
-  const go = () => document.querySelector('#returns')?.scrollIntoView({ behavior: 'smooth' });
+  const [menuOpen, setMenuOpen] = useState(false);
+  const go = () => {
+    setMenuOpen(false);
+    document.querySelector('#returns')?.scrollIntoView({ behavior: 'smooth' });
+  };
+  const goStory = () => {
+    setMenuOpen(false);
+    document.querySelector('#story')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return <main>
-    <header className="site-header">
+    <header className={`site-header ${showBar ? 'header-scrolled' : ''}`}>
       <a className="brand" href="#top"><span className="brand-mark" aria-hidden="true">YAGIRI<br />BREWERY</span><span className="brand-text"><strong>矢切ブルワリー</strong><small>YAGIRI BREWERY</small></span></a>
-      <nav>
-        <a href="#story">私たちのストーリー</a>
-        <a href="#beers">ビールについて</a>
-        <a href="#returns">リターン</a>
-        <a href="#recovery">資金の使いみち</a>
-        <a href="#faq">ご案内</a>
+      <nav className={menuOpen ? 'nav-open' : ''}>
+        <a href="#story" onClick={() => setMenuOpen(false)}>私たちのストーリー</a>
+        <a href="#beers" onClick={() => setMenuOpen(false)}>ビールについて</a>
+        <a href="#returns" onClick={() => setMenuOpen(false)}>リターン</a>
+        <a href="#recovery" onClick={() => setMenuOpen(false)}>資金の使いみち</a>
+        <a href="#faq" onClick={() => setMenuOpen(false)}>ご案内</a>
       </nav>
-      <button className="primary small" onClick={go}>支援する</button>
+      <button className="primary small header-cta" onClick={go}>支援する</button>
+      <button
+        className="menu-toggle"
+        onClick={() => setMenuOpen(!menuOpen)}
+        aria-label={menuOpen ? 'メニューを閉じる' : 'メニューを開く'}
+        aria-expanded={menuOpen}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
     </header>
 
-    <section id="top" className="hero">
-      <div className="hero-copy">
-        <p className="eyebrow">矢切ブルワリー 復旧支援プロジェクト</p>
-        <h1><span className="ln">水に沈んだ醸造所を、</span><span className="ln">もう一度、動かしたい。</span></h1>
-        <p className="hero-lead"><span className="ln">一晩の泥水が、7年分をのみ込みました。</span><span className="ln">保険の基準にあと5cm届かず、補償は0円。</span><span className="ln">それでも、この場所からもう一度、ビールを届けたい。</span></p>
-        <span className="short-rule" />
-        <p className="hero-ask">再開までに必要なのは、約180万円です。</p>
-        <ul className="hero-tags"><li>#クラフトビール</li><li>#千葉・松戸</li><li>#矢切</li><li>#豪雨被害からの復旧</li></ul>
+    {menuOpen && (
+      <div className="mobile-nav-overlay" onClick={() => setMenuOpen(false)}>
+        <div className="mobile-nav-panel" onClick={(e) => e.stopPropagation()}>
+          <div className="mobile-nav-top">
+            <strong>メニュー</strong>
+            <button className="mobile-nav-close-btn" onClick={() => setMenuOpen(false)} aria-label="閉じる">✕</button>
+          </div>
+          <nav className="mobile-nav-list">
+            <a href="#story" onClick={() => setMenuOpen(false)}>私たちのストーリー</a>
+            <a href="#beers" onClick={() => setMenuOpen(false)}>ビールについて</a>
+            <a href="#returns" onClick={() => setMenuOpen(false)}>リターン</a>
+            <a href="#recovery" onClick={() => setMenuOpen(false)}>資金の使いみち</a>
+            <a href="#faq" onClick={() => setMenuOpen(false)}>ご案内</a>
+          </nav>
+          <button className="primary" onClick={go} style={{ marginTop: '20px', width: '100%' }}>今すぐ支援する</button>
+        </div>
       </div>
-      <div className="hero-visual">
-        <img src={gallery[photo][0]} alt={gallery[photo][1]} fetchPriority="high" decoding="async" />
-        <aside className="fund-card">
-          <div className="fund-total"><small>応援購入総額</small><strong className="tbd">—<span>円</span></strong></div>
-          <div
-            className="beer-progress"
-            role="progressbar"
-            aria-label="目標金額に対する達成率"
-            aria-valuetext="公開時に入金額と連動します"
-            style={{ '--beer-level': '0%' }}
-          >
-            <div className="beer-progress-glass" aria-hidden="true">
-              <span className="beer-progress-liquid">
-                <i /><i /><i />
-              </span>
+    )}
+
+    <section id="top" className="hero-v4">
+      {/* 1. Auto-sliding Real Photos Hero Stage (100% clean photos, no text inside) */}
+      <div className="hero-v4-stage">
+        {/* Sliding photos */}
+        {heroSlides.map((slide, i) => (
+          <img
+            key={slide.src}
+            src={slide.src}
+            alt={slide.alt}
+            className={`hero-stage-bg ${slideIndex === i ? 'active' : ''}`}
+            fetchPriority={i === 0 ? 'high' : 'auto'}
+            decoding="async"
+          />
+        ))}
+
+        {/* Slide pagination dots */}
+        <div className="hero-slide-dots">
+          {heroSlides.map((slide, i) => (
+            <button
+              key={slide.src}
+              className={`slide-dot ${slideIndex === i ? 'active' : ''}`}
+              onClick={() => setSlideIndex(i)}
+              aria-label={`スライド ${i + 1}枚目を表示`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* 2. Damage Highlights & Stats Card Block (Real Photos) */}
+      <div className="hero-v4-dashboard">
+        {/* Core Project Mission & Catchphrase */}
+        <div className="hero-project-intro">
+          <h1 className="hero-project-title">
+            <span className="title-ln">水に沈んだ醸造所を、</span>
+            <span className="title-ln title-highlight">もう一度、動かしたい。</span>
+          </h1>
+          <p className="hero-project-lead">
+            <span className="lead-ln">一晩の泥水が、7年分をのみ込みました。</span>
+            <span className="lead-ln">保険の基準にあと5cm届かず、補償は0円。</span>
+            <span className="lead-ln">それでも、この場所からもう一度、ビールを届けたい。</span>
+          </p>
+        </div>
+
+        {/* 3. Primary Orange Heart CTA Button */}
+        <div className="hero-v4-cta-wrap">
+          <button className="hero-v4-cta-btn" onClick={go}>
+            <span className="cta-heart-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </span>
+            <div className="cta-text-group">
+              <strong className="cta-main-text">今すぐ応援する <span className="cta-arrow">›</span></strong>
+              <small className="cta-sub-text">矢切ブルワリーの復旧を支援する</small>
             </div>
-            <div className="beer-progress-copy">
-              <b>CRAFT BEER SUPPORT GAUGE</b>
-              <small>応援が集まるほど、グラスが満ちていきます。</small>
+          </button>
+        </div>
+
+        {/* 4. Crowdfunding Metrics Display (Reset state: funds not started yet) */}
+        <div className="fund-v4-status">
+          <div className="fund-v4-figures">
+            <div className="fund-v4-col">
+              <span className="fund-col-label">第1目標金額</span>
+              <strong className="fund-col-val nowrap">1,000,000<span className="fund-unit">円</span></strong>
+            </div>
+            <div className="fund-v4-col active-highlight">
+              <span className="fund-col-label">現在の支援総額</span>
+              <strong className="fund-col-val accent nowrap">0<span className="fund-unit">円</span></strong>
+            </div>
+            <div className="fund-v4-col">
+              <span className="fund-col-label">支援者数</span>
+              <strong className="fund-col-val nowrap">0<span className="fund-unit">人</span></strong>
+            </div>
+            <div className="fund-v4-badge">
+              <span className="badge-sub">目標金額</span>
+              <strong className="badge-amount">1,000,000<small>円</small></strong>
+              <span className="badge-sub">挑戦スタート！</span>
             </div>
           </div>
-          <ul className="fund-stats">
-            <li><small>達成率</small><b className="tbd">—<span>%</span></b></li>
-            <li><small>サポーター</small><b className="tbd">—<span>人</span></b></li>
-            <li><small>残り</small><b className="tbd">—<span>日</span></b></li>
-          </ul>
-          <dl className="fund-goals">
-            <div><dt>目標金額</dt><dd>1,000,000<span>円</span></dd></div>
-            <div><dt>ネクストゴール</dt><dd>2,000,000<span>円</span></dd></div>
-          </dl>
-          <p className="fund-goal-note">ネクストゴールは、次の豪雨で二度と止めないための設備に充てます。</p>
-          <p className="fund-allin"><b>All-in方式</b>目標金額に届かなかった場合も、集まった金額で復旧を進めます。ご注文は成立し、リターンは必ずお届けします。</p>
-          <button className="primary" onClick={go}>このプロジェクトを支援する</button>
-          <p className="fund-note">「—」は公開時に実績値へ差し替えます。</p>
-        </aside>
-        <div className="hero-thumbs">
-          {gallery.map(([src, alt], index) => <button key={src} className={index === photo ? 'active' : ''} onClick={() => setPhoto(index)} aria-label={alt} aria-pressed={index === photo}><img src={src} alt="" decoding="async" /></button>)}
+
+          {/* Progress Bar (0%) */}
+          <div className="fund-v4-progress-wrap">
+            <div
+              className="fund-v4-progress-bar"
+              role="progressbar"
+              aria-valuenow={0}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            >
+              <div className="fund-v4-progress-fill" style={{ width: '0%' }} />
+            </div>
+            <p className="fund-v4-date">2026年9月10日時点</p>
+          </div>
+        </div>
+      </div>
+
+      {/* 5. Toast Transition Banner */}
+      <div className="hero-v4-toast-banner">
+        <div className="toast-banner-content">
+          <p className="toast-brush-lead">また、<br />この場所で乾杯しよう。</p>
+          <p className="toast-sub-lead">クラフトビールで、<br className="mobile-only" />もっとあたたかい街をつくる。</p>
+          <a href="#story" onClick={goStory} className="toast-scroll-prompt" aria-label="ストーリーを読む">
+            <span className="scroll-arrow">⌄</span>
+            <span className="scroll-text">SCROLL</span>
+          </a>
         </div>
       </div>
     </section>
@@ -129,8 +246,8 @@ export function App() {
       </header>
       <div className="story-body">
       <article>
-        <p>矢切は、川をはさんで東京と向かい合う町です。寅さんの「矢切の渡し」や戦国の古戦場として名前は知られていても、わざわざ降りる人は多くありませんでした。</p>
-        <p>2019年、私たちはこの町の名前を掲げてビールを仕込みはじめました。矢切のタップルーム「YAGIRIYA」でお客さまを迎え、ビールをつくるのは、同じ松戸市内の八柱にある小さな醸造所です。</p>
+        <p>矢切は、江戸川を挟んで寅さんで有名な葛飾柴又と向かい合う町です。演歌の「矢切の渡し」や映画にもなった小説「野菊の墓」の舞台で知られています。</p>
+        <p>2019年、私たちはこの町の名前を掲げてビール造りをはじめました。矢切のタップルーム「YAGIRIYA」でお客さまを迎え、ビールの醸造は同じ松戸市内の八柱にある小さな醸造所です。</p>
         <p>タップルームには、近所の方も、遠方から電車で訪れる方も集まります。飲んだ人が「どこでつくっているんだろう」と興味を持ち、矢切まで足を運んでくれる。その温かい循環がようやく形になり、松戸駅西口に2軒目の店舗を準備していた矢先でした。</p>
         <p>豪雨の泥水が、その八柱の醸造所をのみ込みました。</p>
       </article>
@@ -149,7 +266,7 @@ export function App() {
         <div className="taproom-head">
           <p className="section-label">矢切のタップルーム</p>
           <h3><span className="ln">飲みに来た人が、矢切を</span><span className="ln">知って帰る場所があります。</span></h3>
-          <p>「YAGIRIYA」は、クラフトビールとアメリカンヴィンテージが同居するパブリックハウスです。ヴィンテージショップ CANDY STORE ROCK と一緒に店をつくっていて、50年代のジュークボックスが鳴るカウンターに、近所の方も遠方から来た方も並びます。ここで一杯飲んだ人が「どこでつくっているんだろう」と興味を持つ。その入口が、この店です。</p>
+          <p>「YAGIRIYA」は、クラフトビールとアメリカンヴィンテージが同居するパブリックハウスです。ヴィンテージショップ CANDY STORE ROCK と一緒に店をつくっており、50年代のジュークボックスが鳴るカウンターにお客さんが並びます。ここで一杯飲んだ方々がクラフトビールに興味を持つ矢切ブルワリーに興味を持つ。その入口が、この店です。</p>
         </div>
         <div className="taproom-grid">
           <figure><img src="/assets/taproom-exterior.webp" alt="タップルームYAGIRIYAの外観と看板" loading="lazy" /><figcaption>矢切のタップルーム「YAGIRIYA」。ここが入口です。</figcaption></figure>
@@ -169,7 +286,7 @@ export function App() {
       </header>
       <div className="damage-lead">
         <blockquote><span className="ln">「すべてをリセットするような非情なことが、</span><span className="ln">本当に起こりうるのだと思い知らされました。」</span></blockquote>
-        <p>敷地に流れ込んだ水は、建物の外壁に高い跡を残しました。醸造所の床にたまった水は約10cm。それでも水圧は、3坪のプレハブ冷蔵庫を押し流して大きく歪ませ、庫内には40cmの泥水がたまりました。中に積んでいた麦芽とホップは、袋のまま泥水をかぶりました。使えなくなった原料は、ビールにしておよそ5,000杯分。仕込むはずだったビールが、たった一晩で消えてしまいました。</p>
+        <p>敷地に流れ込んだ水は、建物の外壁に高い跡を残しました。醸造所の床には浸水によって物が散乱、3坪のプレハブ冷蔵庫を押し流して大きく歪ませ、庫内には40cmの泥水がたまりました。庫内に積んでいた麦芽とホップは、袋のまま泥水に浸かり、使えなくなった原料はビールにしておよそ5,000杯分。仕込むはずだったビールが、たった一晩で消えてしまいました。</p>
       </div>
       <figure className="damage-photo">
         <img src="/assets/flood-interior-mud.webp" alt="泥水が引いたあとの醸造所内" loading="lazy" decoding="async" />
@@ -200,11 +317,11 @@ export function App() {
       <div className="damage-appeal">
         <div>
           <p className="section-label">それでも、もう一度</p>
-          <h3><span className="ln">待っていてくださる方が、</span><span className="ln">いることだけが支えです。</span></h3>
+          <h3><span className="ln">待っていてくださる方が、</span><span className="ln">いることが支えです。</span></h3>
         </div>
         <div>
-          <p>この醸造所でつくるから、矢切のビールです。町の名前を背負って出してきた以上、直す場所もここしかありません。</p>
-          <p>正直に言えば、自分たちの力だけでは立て直せないところまで来ています。それでも「再開を待っています」「また飲める日を楽しみにしています」と声をかけてくださる方がいます。その一言が、いまの私たちを立たせています。</p>
+          <p>この醸造所でつくるビールを待っている人がいる。</p>
+          <p>正直に言えば、自分たちの力だけでは立て直すのが難しい状態です。それでも「再開を待っています」「また飲める日を楽しみにしています」と声をかけてくださる方がいます。その一言が、いまの私たちを立たせています。</p>
           <p><strong><span className="ln">この場所からもう一度ビールを出すために、</span><span className="ln">どうか、お力を貸していただけないでしょうか。</span></strong></p>
           <button className="primary" onClick={go}>再出発を支援する</button>
         </div>
