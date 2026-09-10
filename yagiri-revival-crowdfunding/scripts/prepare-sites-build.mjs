@@ -16,6 +16,10 @@ for (const file of [index, worker, hosting]) {
 mkdirSync(path.join(dist, "server"), { recursive: true });
 mkdirSync(path.join(dist, ".openai"), { recursive: true });
 copyFileSync(worker, path.join(dist, "server", "index.js"));
+const baseClient = path.join(root, "worker", "base-client.js");
+if (existsSync(baseClient)) {
+  copyFileSync(baseClient, path.join(dist, "server", "base-client.js"));
+}
 copyFileSync(hosting, path.join(dist, ".openai", "hosting.json"));
 
-console.log("Prepared Sites build: dist/server/index.js and dist/.openai/hosting.json");
+console.log("Prepared Sites build: dist/server/index.js, base-client.js and dist/.openai/hosting.json");

@@ -1,7 +1,19 @@
 {
   "name": "yagiri-fund",
+  "main": "yagiri-revival-crowdfunding/dist/server/index.js",
   "compatibility_date": "2026-08-28",
   "assets": {
-    "directory": "./public"
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "YAGIRI_FUND_KV",
+      "id": "378028e754324110bfd11a8830ec5c37"
+    }
+  ],
+  "triggers": {
+    "crons": ["*/5 * * * *"]
   }
 }

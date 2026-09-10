@@ -8,3 +8,4 @@ scratch/
 *.png.tmp
 qa-*.png
 yagiri-revival-crowdfunding/qa-*.png
+.agents/

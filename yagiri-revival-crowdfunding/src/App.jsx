@@ -46,6 +46,43 @@ export function App() {
   const [photo, setPhoto] = useState(0);
   const [slideIndex, setSlideIndex] = useState(0);
   const [showBar, setShowBar] = useState(false);
+  const [fundData, setFundData] = useState({
+    targetAmount: 1_000_000,
+    totalAmount: 0,
+    supportersCount: 0,
+    percentage: 0,
+    asOfDate: '2026年9月10日時点',
+    itemSales: {},
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch('/api/fund-summary')
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        if (!isMounted || !data) return;
+        const d = data.updatedAt ? new Date(data.updatedAt) : new Date();
+        const dateStr = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日時点`;
+        setFundData({
+          targetAmount: data.targetAmount || 1_000_000,
+          totalAmount: Number(data.totalAmount) || 0,
+          supportersCount: Number(data.supportersCount) || 0,
+          percentage: Math.min(100, Math.round(((data.totalAmount || 0) / 1_000_000) * 1000) / 10),
+          asOfDate: dateStr,
+          itemSales: data.itemSales || {},
+        });
+      })
+      .catch((err) => {
+        // Keep initial fallback figures gracefully if offline or in dev
+        console.warn('Real-time fund summary fetch:', err.message);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -188,7 +225,7 @@ export function App() {
           </button>
         </div>
 
-        {/* 4. Crowdfunding Metrics Display (Reset state: funds not started yet) */}
+        {/* 4. Crowdfunding Metrics Display */}
         <div className="fund-v4-status">
           <div className="fund-v4-figures">
             <div className="fund-v4-col">
@@ -197,31 +234,31 @@ export function App() {
             </div>
             <div className="fund-v4-col active-highlight">
               <span className="fund-col-label">現在の支援総額</span>
-              <strong className="fund-col-val accent nowrap">0<span className="fund-unit">円</span></strong>
+              <strong className="fund-col-val accent nowrap">{fundData.totalAmount.toLocaleString('ja-JP')}<span className="fund-unit">円</span></strong>
             </div>
             <div className="fund-v4-col">
               <span className="fund-col-label">支援者数</span>
-              <strong className="fund-col-val nowrap">0<span className="fund-unit">人</span></strong>
+              <strong className="fund-col-val nowrap">{fundData.supportersCount.toLocaleString('ja-JP')}<span className="fund-unit">人</span></strong>
             </div>
             <div className="fund-v4-badge">
               <span className="badge-sub">目標金額</span>
               <strong className="badge-amount">1,000,000<small>円</small></strong>
-              <span className="badge-sub">挑戦スタート！</span>
+              <span className="badge-sub">{fundData.percentage >= 100 ? '目標達成！' : (fundData.totalAmount > 0 ? `現在 ${fundData.percentage}%` : '挑戦スタート！')}</span>
             </div>
           </div>
 
-          {/* Progress Bar (0%) */}
+          {/* Progress Bar */}
           <div className="fund-v4-progress-wrap">
             <div
               className="fund-v4-progress-bar"
               role="progressbar"
-              aria-valuenow={0}
+              aria-valuenow={fundData.percentage}
               aria-valuemin={0}
               aria-valuemax={100}
             >
-              <div className="fund-v4-progress-fill" style={{ width: '0%' }} />
+              <div className="fund-v4-progress-fill" style={{ width: `${Math.min(100, fundData.percentage)}%` }} />
             </div>
-            <p className="fund-v4-date">2026年9月10日時点</p>
+            <p className="fund-v4-date">{fundData.asOfDate}</p>
           </div>
         </div>
       </div>
@@ -365,14 +402,21 @@ export function App() {
     <section id="returns" className="returns section">
       <header><p className="section-label">リターン一覧</p><h2><span className="ln">3,000円から、</span><span className="ln">再開への一歩を支えていただけます。</span></h2><p>All-in方式のため、目標未達でもご注文は成立します。発送は2027年1月以降の予定です。お酒を含むリターンは20歳以上の方に限ります。</p></header>
       <div className="reward-list">
-        {rewards.map(([price, kind, title, left, image, alt, url]) => <article key={price + title}>
-          <img className="reward-image" src={image} alt={alt} loading="lazy" decoding="async" />
-          <ul className="reward-meta">
-            <li>残り {left}口</li>
-            <li>2027年1月以降お届け予定</li>
-          </ul>
-          <a className="reward-cta" href={url} target="_blank" rel="noopener noreferrer">詳しく見る</a>
-        </article>)}
+        {rewards.map(([price, kind, title, left, image, alt, url]) => {
+          const itemId = url.split('/items/')[1];
+          const sold = fundData.itemSales[itemId] || 0;
+          const currentLeft = Math.max(0, parseInt(left, 10) - sold);
+          return (
+            <article key={price + title}>
+              <img className="reward-image" src={image} alt={alt} loading="lazy" decoding="async" />
+              <ul className="reward-meta">
+                <li>{currentLeft === 0 ? <strong style={{ color: '#dc2626' }}>完売（残り0口）</strong> : `残り ${currentLeft}口`}</li>
+                <li>2027年1月以降お届け予定</li>
+              </ul>
+              <a className="reward-cta" href={url} target="_blank" rel="noopener noreferrer">詳しく見る</a>
+            </article>
+          );
+        })}
       </div>
     </section>
 
