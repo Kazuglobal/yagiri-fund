@@ -7,12 +7,15 @@
 #   style-src  : Google Fonts の CSS / prerender された style 属性（'unsafe-inline'）
 #   font-src   : Google Fonts のフォント本体
 #   img-src    : crowdfunding-a4.html が data: URI の画像を埋め込んでいる
+#   script-src : static.cloudflareinsights.com — 本番ゾーンが配信時に Cloudflare Web Analytics の
+#                ビーコンを自動で差し込む（オリジンのHTMLには無い）。止めると先方の解析が止まる
+#   connect-src: cloudflareinsights.com — 同ビーコンの送信先
 #   connect-src: 支援総額 API（src/App.jsx の FUND_API_ORIGIN と一致させること。
 #                tests/security-headers.test.mjs が突き合わせを検査する）
 # HSTS は includeSubDomains を付けない。yagiribrewery.com の他のサブドメイン
 # （www は BASE の配信）はこちらの管理外のため。
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://yagiri-fund-lp.globalbunny.workers.dev; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://yagiri-fund-lp.globalbunny.workers.dev https://cloudflareinsights.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'; upgrade-insecure-requests
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

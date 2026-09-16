@@ -127,6 +127,10 @@ test("CSP allows exactly the external origins the page actually uses", async () 
     assert.ok(directive("connect-src").includes(apiOrigin), `connect-src must allow ${apiOrigin}`);
   }
 
+  // the production zone injects the Cloudflare Web Analytics beacon at the edge
+  assert.ok(directive("script-src").includes("https://static.cloudflareinsights.com"));
+  assert.ok(directive("connect-src").includes("https://cloudflareinsights.com"));
+
   // Google Fonts: stylesheet from googleapis, font files from gstatic
   const html = await readFile(new URL("index.html", ROOT), "utf8");
   if (html.includes("fonts.googleapis.com")) {
