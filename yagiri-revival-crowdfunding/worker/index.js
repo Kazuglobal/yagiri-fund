@@ -12,6 +12,35 @@ const OAUTH_STATE_MAX_AGE_SECONDS = 600;
 const CALLBACK_PATH = '/api/base/callback';
 const OAUTH_STATE_KV_PREFIX = 'BASE_OAUTH_STATE:';
 
+// 本番ページ側は public/_headers が同じヘッダを付ける。ここは Worker 自身が
+// 組み立てる応答（/api/* の JSON・テキスト・連携完了HTML）と、Worker を経由して
+// 返す静的アセットのための保険。値は _headers と揃えること。
+const BASELINE_SECURITY_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()',
+  'Strict-Transport-Security': 'max-age=31536000',
+};
+
+// /api/* は HTML として解釈される前提が無いので、何も読み込ませない。
+const API_CSP = "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'";
+
+// 連携完了画面だけはインラインの <style> を持つ。
+const CALLBACK_PAGE_CSP = "default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'";
+
+// 既存の Content-Security-Policy は上書きしない（静的アセットのCSPは _headers が決める）。
+function withSecurityHeaders(response, { csp } = {}) {
+  const secured = new Response(response.body, response);
+  for (const [name, value] of Object.entries(BASELINE_SECURITY_HEADERS)) {
+    secured.headers.set(name, value);
+  }
+  if (csp && !secured.headers.has('Content-Security-Policy')) {
+    secured.headers.set('Content-Security-Policy', csp);
+  }
+  return secured;
+}
+
 function textResponse(body, status, extraHeaders = {}) {
   return new Response(body, {
     status,
@@ -139,6 +168,7 @@ async function handleAuthCallback(request, url, env, ctx) {
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
         'Cache-Control': 'no-store',
+        'Content-Security-Policy': CALLBACK_PAGE_CSP,
         ...CLEAR_STATE_COOKIE,
       },
     });
@@ -148,10 +178,7 @@ async function handleAuthCallback(request, url, env, ctx) {
   }
 }
 
-export default {
-  async fetch(request, env, ctx) {
-    const url = new URL(request.url);
-
+async function route(request, url, env, ctx) {
     // 1. API: Get Crowdfunding Summary
     if (url.pathname === '/api/fund-summary') {
       try {
@@ -197,6 +224,14 @@ export default {
     indexUrl.pathname = '/index.html';
     indexUrl.search = '';
     return env.ASSETS.fetch(new Request(indexUrl, request));
+}
+
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    const response = await route(request, url, env, ctx);
+    const isApi = url.pathname.startsWith('/api/');
+    return withSecurityHeaders(response, { csp: isApi ? API_CSP : undefined });
   },
 
   // 5. Cron Trigger: the only periodic path that re-aggregates from BASE.
