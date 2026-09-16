@@ -172,6 +172,7 @@ export function App() {
             <a href="#returns" onClick={() => setMenuOpen(false)}>リターン</a>
             <a href="#recovery" onClick={() => setMenuOpen(false)}>資金の使い道</a>
             <a href="#faq" onClick={() => setMenuOpen(false)}>ご案内</a>
+            <a href="https://www.yagiribrewery.com/" target="_blank" rel="noopener noreferrer">公式サイト ↗</a>
           </nav>
           <button className="primary" onClick={go} style={{ marginTop: '20px', width: '100%' }}>今すぐ支援する</button>
         </div>
@@ -456,6 +457,7 @@ export function App() {
       <article>
         <p>私たちがつくりたかったのは、矢切を知らない人にとっての入口です。歴史や地理から入るのは、少し遠い。けれど一杯のビールなら、飲んだその日から、矢切は自分と関係のある地名になります。</p>
         <p>その入口は、醸造所が止まっている間、閉じたままです。町の側から見れば、知られる機会が一つ減り続けている。私たちが急いでいるのは、そのためです。</p>
+        <a className="official-link" href="https://www.yagiribrewery.com/" target="_blank" rel="noopener noreferrer">矢切ブルワリー公式サイト<span aria-hidden="true">↗</span></a>
       </article>
       <div className="people-media">
         <figure className="people-portrait">
@@ -528,7 +530,7 @@ export function App() {
       <strong>矢切から、また、ビールを。</strong>
     </section>
 
-    <footer><div><b>矢切ブルワリー合同会社 ／ 日暮醸造所</b><span>千葉県松戸市</span></div></footer>
+    <footer><div><b>矢切ブルワリー合同会社 ／ 日暮醸造所</b><span>千葉県松戸市</span></div><a className="footer-official" href="https://www.yagiribrewery.com/" target="_blank" rel="noopener noreferrer">公式サイト www.yagiribrewery.com<span aria-hidden="true">↗</span></a></footer>
 
     <div className={showBar ? 'support-bar show' : 'support-bar'}>
       <div className="support-bar-figure"><small>第一目標</small><strong>1,000,000<span>円</span></strong></div>

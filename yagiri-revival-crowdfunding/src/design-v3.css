@@ -1031,3 +1031,13 @@ body .people>.beliefs article>span:not(.ln),
   .fund-v4-status-text{display:none}
   .fund-v4-progress-foot{justify-content:flex-end}
 }
+
+/* ---------- official site links ---------- */
+.official-link,.footer-official{display:inline-flex;align-items:center;gap:6px;
+  color:var(--orange);text-decoration:none;border-bottom:1px solid currentColor;
+  font-weight:700;line-height:1.6}
+.official-link{font-size:var(--t-card);margin-top:4px}
+.footer-official{font-size:var(--t-cap);align-self:center}
+.official-link:hover,.footer-official:hover{color:var(--orange-dark)}
+.official-link span,.footer-official span{font-size:.9em}
+@media(max-width:620px){.footer-official{margin-top:14px}}
