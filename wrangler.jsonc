@@ -1,24 +1,23 @@
 {
+  // 本番 fund.yagiribrewery.com を配信する Worker。
+  // GitHub (section90907/yagiri-fund) の main への push を Cloudflare Workers Builds が
+  // 拾ってデプロイする。ビルドが走るのは矢切ブルワリー側のアカウントなので、
+  // ここには「そのアカウントに存在しないリソース」を書いてはいけない。
+  //
+  // 2026-09-10 の f795692 で main / kv_namespaces / crons が追加されたが、
+  //   - main   : .gitignore 対象の dist/ を指しており、チェックアウト時に存在しない
+  //   - kv_id  : 別アカウント（開発側）の namespace ID で、本番アカウントには無い
+  // の2点により、以降すべての本番ビルドが失敗し続けていた（bfc10d0 で凍結）。
+  // そのため、このファイルは本来の役割である「./public の静的配信のみ」に戻す。
+  //
+  // BASE API（/api/*）を本番でも動かすには、矢切ブルワリー側アカウントで
+  // KV namespace を作成し、その ID を kv_namespaces に記載したうえで
+  // main / run_worker_first / crons を復活させる必要がある。
+  // 開発側アカウントの API 付き Worker は yagiri-revival-crowdfunding/wrangler.jsonc
+  // （yagiri-fund-lp）がそのまま保持している。
   "name": "yagiri-fund",
-  // Cloudflare Workers Builds はリポジトリをそのままチェックアウトしてビルドするため、
-  // main に dist/ を指すとビルドが失敗する（dist/ は .gitignore 対象）。
-  // dist/server/index.js は worker/index.js の単なるコピー（prepare-sites-build.mjs）なので、
-  // main は追跡済みのソースを直接指す。wrangler が base-client.js ごとバンドルする。
-  "main": "yagiri-revival-crowdfunding/worker/index.js",
   "compatibility_date": "2026-08-28",
-  "workers_dev": true,
   "assets": {
-    "directory": "./public",
-    "binding": "ASSETS",
-    "run_worker_first": ["/api/*"]
-  },
-  "kv_namespaces": [
-    {
-      "binding": "YAGIRI_FUND_KV",
-      "id": "378028e754324110bfd11a8830ec5c37"
-    }
-  ],
-  "triggers": {
-    "crons": ["*/5 * * * *"]
+    "directory": "./public"
   }
 }
