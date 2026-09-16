@@ -20,48 +20,73 @@ export const CF_ITEM_IDS = new Set([
 
 export const TARGET_AMOUNT = 1_000_000;
 
-export function getAuthUrl(clientId, redirectUri) {
+const BASE_API = 'https://api.thebase.in/1';
+const SUMMARY_KEY = 'LATEST_FUND_SUMMARY';
+const ORDERS_PAGE_SIZE = 100;
+// 暴走防止の上限。到達したら合計が不完全なので、保存せずに失敗させる。
+const MAX_ORDER_PAGES = 100;
+
+// 入金前・キャンセル済みの注文は支援額に含めない。
+// 未入金注文を数えると、支払う気のない注文で表示額を水増しできてしまう。
+const EXCLUDED_DISPATCH_STATUSES = new Set(['unpaid', 'cancelled']);
+
+// read_users はショップ検証（BASE_EXPECTED_SHOP_ID 設定時）にだけ必要。
+export function getAuthUrl(clientId, redirectUri, state, { verifyShop = false } = {}) {
   const params = new URLSearchParams({
     response_type: 'code',
     client_id: clientId,
     redirect_uri: redirectUri,
-    scope: 'read_orders read_items',
+    scope: verifyShop ? 'read_orders read_items read_users' : 'read_orders read_items',
+    state,
   });
-  return 'https://api.thebase.in/1/oauth/authorize?' + params.toString();
+  return BASE_API + '/oauth/authorize?' + params.toString();
 }
 
-export async function exchangeCodeForTokens(code, clientId, clientSecret, redirectUri, kv) {
-  const body = new URLSearchParams({
+async function requestToken(params) {
+  const res = await fetch(BASE_API + '/oauth/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(params).toString(),
+  });
+
+  if (!res.ok) {
+    console.error('BASE token request failed (' + res.status + '):', await res.text());
+    throw new Error('BASE token request failed (' + res.status + ')');
+  }
+  return res.json();
+}
+
+// トークンは取得するだけで保存しない。
+// 呼び出し側がショップを検証してから saveTokens で保存する。
+export function exchangeCodeForTokens(code, clientId, clientSecret, redirectUri) {
+  return requestToken({
     grant_type: 'authorization_code',
     client_id: clientId,
     client_secret: clientSecret,
     code,
     redirect_uri: redirectUri,
   });
+}
 
-  const res = await fetch('https://api.thebase.in/1/oauth/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: body.toString(),
+export async function fetchShopId(accessToken) {
+  const res = await fetch(BASE_API + '/users/me', {
+    headers: { Authorization: 'Bearer ' + accessToken },
   });
-
   if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error('BASE token exchange failed (' + res.status + '): ' + errorText);
+    throw new Error('BASE users/me failed (' + res.status + ')');
   }
-
   const data = await res.json();
-  if (kv) {
-    await kv.put('BASE_ACCESS_TOKEN', data.access_token, {
-      expirationTtl: Math.max(60, (data.expires_in || 86400) - 300),
-    });
-    if (data.refresh_token) {
-      await kv.put('BASE_REFRESH_TOKEN', data.refresh_token);
-    }
-    await kv.put('BASE_TOKEN_SAVED_AT', new Date().toISOString());
-  }
+  return data.user?.shop_id ?? null;
+}
 
-  return data;
+export async function saveTokens(kv, data, timestampKey = 'BASE_TOKEN_SAVED_AT') {
+  await kv.put('BASE_ACCESS_TOKEN', data.access_token, {
+    expirationTtl: Math.max(60, (data.expires_in || 86400) - 300),
+  });
+  if (data.refresh_token) {
+    await kv.put('BASE_REFRESH_TOKEN', data.refresh_token);
+  }
+  await kv.put(timestampKey, new Date().toISOString());
 }
 
 export async function getValidAccessToken(clientId, clientSecret, kv) {
@@ -77,60 +102,57 @@ export async function getValidAccessToken(clientId, clientSecret, kv) {
     return null;
   }
 
-  const body = new URLSearchParams({
-    grant_type: 'refresh_token',
-    client_id: clientId,
-    client_secret: clientSecret,
-    refresh_token: refreshToken,
-  });
-
-  const res = await fetch('https://api.thebase.in/1/oauth/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: body.toString(),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
+  let data;
+  try {
+    data = await requestToken({
+      grant_type: 'refresh_token',
+      client_id: clientId,
+      client_secret: clientSecret,
+      refresh_token: refreshToken,
+    });
+  } catch (err) {
     console.error('Failed to refresh BASE token:', err);
     return null;
   }
 
-  const data = await res.json();
-  await kv.put('BASE_ACCESS_TOKEN', data.access_token, {
-    expirationTtl: Math.max(60, (data.expires_in || 86400) - 300),
-  });
-  if (data.refresh_token) {
-    await kv.put('BASE_REFRESH_TOKEN', data.refresh_token);
-  }
-  await kv.put('BASE_TOKEN_REFRESHED_AT', new Date().toISOString());
+  await saveTokens(kv, data, 'BASE_TOKEN_REFRESHED_AT');
   return data.access_token;
 }
 
-export async function calculateFundSummary(clientId, clientSecret, kv) {
-  if (kv) {
-    const cached = await kv.get('LATEST_FUND_SUMMARY', { type: 'json' });
-    if (cached && cached.cachedUntil && Date.now() < cached.cachedUntil) {
-      return cached;
-    }
-  }
+function unconfiguredSummary() {
+  return {
+    isConfigured: false,
+    targetAmount: TARGET_AMOUNT,
+    totalAmount: 0,
+    supportersCount: 0,
+    percentage: 0,
+    updatedAt: new Date().toISOString(),
+    itemSales: {},
+  };
+}
 
+function isCountableOrder(order) {
+  if (order.cancelled !== null && order.cancelled !== undefined) return false;
+  return !EXCLUDED_DISPATCH_STATUSES.has(order.dispatch_status);
+}
+
+// 公開リクエストから呼ぶ読み取り専用の入口。BASE API は一切叩かない。
+// キャッシュがあれば古くてもそのまま返し、無ければ未集計として返す
+// （再集計は cron と OAuth 連携直後だけが行う）。
+export async function getFundSummary(kv) {
+  const cached = kv ? await kv.get(SUMMARY_KEY, { type: 'json' }) : null;
+  return cached || unconfiguredSummary();
+}
+
+// BASE から全件集計し直す。途中で API が失敗したら例外を投げ、
+// 不完全な合計でキャッシュを上書きしない。
+export async function refreshFundSummary(clientId, clientSecret, kv) {
   const token = await getValidAccessToken(clientId, clientSecret, kv);
   if (!token) {
-    return {
-      isConfigured: false,
-      targetAmount: TARGET_AMOUNT,
-      totalAmount: 0,
-      supportersCount: 0,
-      percentage: 0,
-      updatedAt: new Date().toISOString(),
-      itemSales: {},
-    };
+    return unconfiguredSummary();
   }
 
-  let offset = 0;
-  const limit = 100;
-  let hasMore = true;
+  const limit = ORDERS_PAGE_SIZE;
 
   let totalAmount = 0;
   const supporterOrders = new Set();
@@ -140,8 +162,12 @@ export async function calculateFundSummary(clientId, clientSecret, kv) {
     itemSales[id] = 0;
   }
 
-  while (hasMore) {
-    const res = await fetch('https://api.thebase.in/1/orders?limit=' + limit + '&offset=' + offset, {
+  for (let page = 0; ; page += 1) {
+    if (page >= MAX_ORDER_PAGES) {
+      throw new Error('BASE orders exceeded ' + MAX_ORDER_PAGES * limit + ' orders; refusing to cache a partial total');
+    }
+    const offset = page * limit;
+    const res = await fetch(BASE_API + '/orders?limit=' + limit + '&offset=' + offset, {
       headers: {
         Authorization: 'Bearer ' + token,
       },
@@ -149,19 +175,18 @@ export async function calculateFundSummary(clientId, clientSecret, kv) {
 
     if (!res.ok) {
       console.error('BASE orders API error (' + res.status + '):', await res.text());
-      break;
+      throw new Error('BASE orders API error (' + res.status + ')');
     }
 
     const data = await res.json();
     const orders = data.orders || [];
 
     if (orders.length === 0) {
-      hasMore = false;
       break;
     }
 
     for (const order of orders) {
-      if (order.cancelled !== null && order.cancelled !== undefined) {
+      if (!isCountableOrder(order)) {
         continue;
       }
 
@@ -187,9 +212,8 @@ export async function calculateFundSummary(clientId, clientSecret, kv) {
       }
     }
 
-    offset += limit;
-    if (orders.length < limit || offset >= 1000) {
-      hasMore = false;
+    if (orders.length < limit) {
+      break;
     }
   }
 
@@ -203,12 +227,11 @@ export async function calculateFundSummary(clientId, clientSecret, kv) {
     supportersCount,
     percentage,
     updatedAt: new Date().toISOString(),
-    cachedUntil: Date.now() + 3 * 60 * 1000,
     itemSales,
   };
 
   if (kv) {
-    await kv.put('LATEST_FUND_SUMMARY', JSON.stringify(summary));
+    await kv.put(SUMMARY_KEY, JSON.stringify(summary));
   }
 
   return summary;

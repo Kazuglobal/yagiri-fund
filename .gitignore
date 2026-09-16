@@ -9,3 +9,4 @@ scratch/
 qa-*.png
 yagiri-revival-crowdfunding/qa-*.png
 .agents/
+.dev.vars*
