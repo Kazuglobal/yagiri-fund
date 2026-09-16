@@ -517,7 +517,7 @@ export function App() {
       <strong>矢切から、また、ビールを。</strong>
     </section>
 
-    <footer><div><b>矢切ブルワリー合同会社 ／ 日暮醸造所</b><span>千葉県松戸市</span></div><p>一部の写真は構成イメージです。支援総額・支援者数・達成率は、公式オンラインショップの注文データを集計して自動更新しています（表示中の日付時点の数値です）。</p></footer>
+    <footer><div><b>矢切ブルワリー合同会社 ／ 日暮醸造所</b><span>千葉県松戸市</span></div></footer>
 
     <div className={showBar ? 'support-bar show' : 'support-bar'}>
       <div className="support-bar-figure"><small>第一目標</small><strong>1,000,000<span>円</span></strong></div>
