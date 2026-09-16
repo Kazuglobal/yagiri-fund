@@ -890,3 +890,144 @@
   }
 }
 
+
+/* ============================================================
+   TYPOGRAPHY NORMALIZATION (v3.1)
+   Loaded last. One scale for the whole page.
+   Rule: nothing that carries meaning renders below 12px on any
+   device; card body copy, captions and meta labels each have a
+   single size instead of the 9–15.5px spread they had before.
+   ============================================================ */
+:root{
+  --t-lead:clamp(15.5px,1.2vw,18px);    /* 主要段落 */
+  --t-card:clamp(14px,1.05vw,15.5px);   /* カード・カラム内の本文 */
+  --t-cap:clamp(12.5px,.95vw,13.5px);   /* キャプション・注記 */
+  --t-label:clamp(11.5px,.9vw,12.5px);  /* ラベル・メタ情報 */
+}
+
+/* --- .ln is a line unit, never a style unit: it must not pick up
+       the eyebrow/label styling of a sibling <span> --- */
+.ln{font-size:inherit;font-weight:inherit;letter-spacing:inherit;color:inherit}
+
+/* --- card / column body copy (was 12px in three places) --- */
+.damage-details p,
+.beer-intro p,
+.beer-lineup p,
+.team-roles p,
+body .people>.beliefs p,
+.closing p{font-size:var(--t-card);line-height:2.0}
+
+/* --- paragraphs that sit next to the main story copy --- */
+.taproom-head p,
+.damage-appeal>div:last-child>p,
+.team-story-copy p,
+.join header>p:last-child,
+.returns header>p:last-child{font-size:var(--t-lead);line-height:2.05}
+.join header>p:last-child,.returns header>p:last-child{font-size:var(--t-card)}
+
+/* --- captions & fine print: one size everywhere --- */
+.story-media figcaption,
+.damage-documentary figcaption,
+.taproom-grid figcaption,
+.people-media figcaption,
+.damage-photo figcaption,
+.waterline figcaption span,
+.legal,
+footer,
+footer p,
+.reward-meta li,
+.recovery li small,
+.fund-allin,
+.fund-card .fund-note,
+.fund-card .fund-goal-note{font-size:var(--t-cap);line-height:1.85}
+footer b{font-size:var(--t-label);letter-spacing:.02em}
+
+/* --- micro labels --- */
+.eyebrow,.section-label,
+.damage-details article>span:not(.ln),
+.team-roles article>span:not(.ln),
+.beer-lineup small,
+.beer-lineup article>span:not(.ln),
+body .people>.beliefs article>span:not(.ln),
+.recovery li>span,
+.label-types small,
+.featured-card small,
+.hero-tags li,
+.facts-band-label,
+.facts div>span:not(.ln),
+.fund-stats small,
+.fund-goals dt,
+.fund-total small,
+.support-bar-note,
+.support-bar-figure small{font-size:var(--t-label);line-height:1.7}
+.brand small{font-size:11px}
+
+/* --- controls --- */
+.primary{font-size:14px}
+.primary.small{font-size:13px}
+.site-header nav a{font-size:13px}
+.reward-list article button,
+.reward-list article .reward-cta{font-size:13px;padding:12px}
+.guide article b{font-size:clamp(16px,1.35vw,19px)}
+.recovery li b{font-size:var(--t-card)}
+
+/* ------------------------------------------------------------
+   HERO DASHBOARD — mobile legibility
+   The ≤580px block previously shrank labels to 7.5–8.5px to keep
+   three figures and the badge on one row. The badge duplicated the
+   目標金額 column, so on narrow screens it steps aside and the
+   status moves under the progress bar instead.
+   ------------------------------------------------------------ */
+.fund-v4-progress-foot{display:flex;align-items:baseline;justify-content:space-between;
+  gap:12px;margin:7px 0 0}
+.fund-v4-status-text{font-size:var(--t-label);font-weight:700;color:#c74d02;letter-spacing:.02em}
+.fund-v4-date{margin:0;font-size:var(--t-label);color:#888}
+
+.hero-project-title{font-size:clamp(22px,4.9vw,32px)}
+.hero-project-lead{font-size:clamp(14px,3.1vw,16px);line-height:1.85}
+.cta-sub-text{font-size:clamp(12.5px,1.3vw,14px)}
+.toast-scroll-prompt .scroll-text{font-size:11px}
+
+@media(max-width:580px){
+  .fund-v4-figures{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .fund-v4-badge{display:none}
+  .fund-v4-col{padding-right:8px}
+  .fund-col-label{font-size:11.5px;white-space:nowrap;margin-bottom:3px}
+  .fund-col-val{font-size:18px;white-space:nowrap}
+  .fund-unit{font-size:11.5px}
+  .fund-v4-progress-bar{height:12px}
+  .fund-v4-status-text,.fund-v4-date{font-size:11.5px}
+}
+
+/* ------------------------------------------------------------
+   LINE BREAKS
+   `.ln` is block + text-wrap:balance, which already prevents the
+   1–2 character orphan lines. The ≤680px `white-space:nowrap`
+   override fought it and could push a heading past the viewport,
+   so it is removed.
+   ------------------------------------------------------------ */
+@media(max-width:680px){
+  .damage-story h2 .ln{white-space:normal}
+}
+@media(max-width:520px){
+  /* the narrow column makes two of the intended lines too long to
+     hold; let them wrap naturally rather than overflow */
+  .damage-story h2{letter-spacing:.02em}
+  .damage-appeal h3 .ln,.team-story-heading h3 .ln,.taproom-head h3 .ln{text-wrap:pretty}
+}
+
+/* --- the 目標金額 badge duplicates the 第1目標金額 column and only has room
+       for legible type on wide screens; below 1024px it steps aside and the
+       status line under the progress bar carries the same information. --- */
+@media(max-width:1023px){
+  .fund-v4-badge{display:none}
+}
+.fund-v4-badge{width:clamp(88px,8.8vw,102px);height:clamp(88px,8.8vw,102px)}
+.fund-v4-badge .badge-sub{font-size:11px}
+.fund-v4-badge .badge-amount{font-size:14.5px;margin:3px 0}
+.fund-v4-badge .badge-amount small{font-size:11px}
+/* the badge already states the status on wide screens — don't say it twice */
+@media(min-width:1024px){
+  .fund-v4-status-text{display:none}
+  .fund-v4-progress-foot{justify-content:flex-end}
+}

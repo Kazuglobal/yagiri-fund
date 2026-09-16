@@ -37,7 +37,7 @@ const heroSlides = [
   { src: '/assets/slide_flood_waterline.webp', alt: '外壁と窓に残った浸水水位の跡' },
   { src: '/assets/slide_damaged_coldroom.webp', alt: '水圧で歪んだプレハブ冷蔵庫' },
   { src: '/assets/damage_floor.webp', alt: '床上約40cmの浸水被害' },
-  { src: '/assets/damage_kegs.webp', alt: '約5,000杯分の原料・ケグの被害' },
+  { src: '/assets/damage_kegs.webp', alt: '約4,500杯分の原料・ケグの被害' },
   { src: '/assets/taproom-bar.webp', alt: 'アメリカンヴィンテージのタップルーム店内' },
   { src: '/assets/patrons_cheer.webp', alt: '賑わう店内とお客様の笑顔' },
 ];
@@ -132,7 +132,7 @@ export function App() {
         <a href="#story" onClick={() => setMenuOpen(false)}>私たちのストーリー</a>
         <a href="#beers" onClick={() => setMenuOpen(false)}>ビールについて</a>
         <a href="#returns" onClick={() => setMenuOpen(false)}>リターン</a>
-        <a href="#recovery" onClick={() => setMenuOpen(false)}>資金の使いみち</a>
+        <a href="#recovery" onClick={() => setMenuOpen(false)}>資金の使い道</a>
         <a href="#faq" onClick={() => setMenuOpen(false)}>ご案内</a>
       </nav>
       <button className="primary small header-cta" onClick={go}>支援する</button>
@@ -159,7 +159,7 @@ export function App() {
             <a href="#story" onClick={() => setMenuOpen(false)}>私たちのストーリー</a>
             <a href="#beers" onClick={() => setMenuOpen(false)}>ビールについて</a>
             <a href="#returns" onClick={() => setMenuOpen(false)}>リターン</a>
-            <a href="#recovery" onClick={() => setMenuOpen(false)}>資金の使いみち</a>
+            <a href="#recovery" onClick={() => setMenuOpen(false)}>資金の使い道</a>
             <a href="#faq" onClick={() => setMenuOpen(false)}>ご案内</a>
           </nav>
           <button className="primary" onClick={go} style={{ marginTop: '20px', width: '100%' }}>今すぐ支援する</button>
@@ -204,7 +204,7 @@ export function App() {
             <span className="title-ln title-highlight">もう一度、動かしたい。</span>
           </h1>
           <p className="hero-project-lead">
-            <span className="lead-ln">一晩の泥水が、7年分をのみ込みました。</span>
+            <span className="lead-ln">一晩の泥水が、7年分を飲み込みました。</span>
             <span className="lead-ln">保険の基準にあと5cm届かず、補償は0円。</span>
             <span className="lead-ln">それでも、この場所からもう一度、ビールを届けたい。</span>
           </p>
@@ -258,7 +258,10 @@ export function App() {
             >
               <div className="fund-v4-progress-fill" style={{ width: `${Math.min(100, fundData.percentage)}%` }} />
             </div>
-            <p className="fund-v4-date">{fundData.asOfDate}</p>
+            <div className="fund-v4-progress-foot">
+              <span className="fund-v4-status-text">{fundData.percentage >= 100 ? '目標達成！' : (fundData.totalAmount > 0 ? `達成率 ${fundData.percentage}%` : '挑戦スタート！')}</span>
+              <span className="fund-v4-date">{fundData.asOfDate}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -267,7 +270,7 @@ export function App() {
       <div className="hero-v4-toast-banner">
         <div className="toast-banner-content">
           <p className="toast-brush-lead">また、<br />この場所で乾杯しよう。</p>
-          <p className="toast-sub-lead">クラフトビールで、<br className="mobile-only" />もっとあたたかい街をつくる。</p>
+          <p className="toast-sub-lead">クラフトビールで、<br className="mobile-only" />もっと温かい街をつくる。</p>
           <a href="#story" onClick={goStory} className="toast-scroll-prompt" aria-label="ストーリーを読む">
             <span className="scroll-arrow">⌄</span>
             <span className="scroll-text">SCROLL</span>
@@ -284,9 +287,9 @@ export function App() {
       <div className="story-body">
       <article>
         <p>矢切は、江戸川を挟んで寅さんで有名な葛飾柴又と向かい合う町です。演歌の「矢切の渡し」や映画にもなった小説「野菊の墓」の舞台で知られています。</p>
-        <p>2019年、私たちはこの町の名前を掲げてビール造りをはじめました。矢切のタップルーム「YAGIRIYA」でお客さまを迎え、ビールの醸造は同じ松戸市内の八柱にある小さな醸造所です。</p>
+        <p>2019年、私たちはこの町の名前を掲げてビール造りを始めました。矢切のタップルーム「YAGIRIYA」でお客さまを迎え、ビールの醸造は同じ松戸市内の八柱にある小さな醸造所です。</p>
         <p>タップルームには、近所の方も、遠方から電車で訪れる方も集まります。飲んだ人が「どこでつくっているんだろう」と興味を持ち、矢切まで足を運んでくれる。その温かい循環がようやく形になり、松戸駅西口に2軒目の店舗を準備していた矢先でした。</p>
-        <p>豪雨の泥水が、その八柱の醸造所をのみ込みました。</p>
+        <p>豪雨の泥水が、その八柱の醸造所を飲み込みました。</p>
       </article>
       <div className="story-media">
         <figure>
@@ -303,7 +306,7 @@ export function App() {
         <div className="taproom-head">
           <p className="section-label">矢切のタップルーム</p>
           <h3><span className="ln">飲みに来た人が、矢切を</span><span className="ln">知って帰る場所があります。</span></h3>
-          <p>「YAGIRIYA」は、クラフトビールとアメリカンヴィンテージが同居するパブリックハウスです。ヴィンテージショップ CANDY STORE ROCK と一緒に店をつくっており、50年代のジュークボックスが鳴るカウンターにお客さんが並びます。ここで一杯飲んだ方々がクラフトビールに興味を持つ矢切ブルワリーに興味を持つ。その入口が、この店です。</p>
+          <p>「YAGIRIYA」は、クラフトビールとアメリカンヴィンテージが同居するパブリックハウスです。ヴィンテージショップ CANDY STORE ROCK と一緒に店をつくっており、50年代のジュークボックスが鳴るカウンターにお客さんが並びます。ここで一杯飲んだ方が、クラフトビールに興味を持ち、矢切ブルワリーを知ってくださる。その入口が、この店です。</p>
         </div>
         <div className="taproom-grid">
           <figure><img src="/assets/taproom-exterior.webp" alt="タップルームYAGIRIYAの外観と看板" loading="lazy" /><figcaption>矢切のタップルーム「YAGIRIYA」。ここが入口です。</figcaption></figure>
@@ -323,7 +326,7 @@ export function App() {
       </header>
       <div className="damage-lead">
         <blockquote><span className="ln">「すべてをリセットするような非情なことが、</span><span className="ln">本当に起こりうるのだと思い知らされました。」</span></blockquote>
-        <p>敷地に流れ込んだ水は、建物の外壁に高い跡を残しました。醸造所の床には浸水によって物が散乱、3坪のプレハブ冷蔵庫を押し流して大きく歪ませ、庫内には40cmの泥水がたまりました。庫内に積んでいた麦芽とホップは、袋のまま泥水に浸かり、使えなくなった原料はビールにしておよそ5,000杯分。仕込むはずだったビールが、たった一晩で消えてしまいました。</p>
+        <p>敷地に流れ込んだ水は、建物の外壁に高い跡を残しました。醸造所の床は浸水で物が散乱し、水は3坪のプレハブ冷蔵庫を押し流して大きく歪ませ、庫内には40cmの泥水が溜まりました。庫内に積んでいた麦芽とホップは、袋のまま泥水に浸かり、使えなくなった原料はビールにしておよそ4,500杯分。仕込むはずだったビールが、たった一晩で消えてしまいました。</p>
       </div>
       <figure className="damage-photo">
         <img src="/assets/flood-interior-mud.webp" alt="泥水が引いたあとの醸造所内" loading="lazy" decoding="async" />
@@ -342,7 +345,7 @@ export function App() {
         </article>
         <article>
           <span>02 ／ 醸造環境</span>
-          <h3><span className="ln">室温42℃。</span><span className="ln">いまは仕込みができません。</span></h3>
+          <h3><span className="ln">室温42℃。</span><span className="ln">今は仕込みができません。</span></h3>
           <p>エアコンは3台中2台が停止。残る1台も室外機が水をかぶり、いつ止まってもおかしくありません。発酵温度を保つ冷却器（チラー）も効率が大きく落ちています。この環境では、安全なビールをつくれません。</p>
         </article>
         <article>
@@ -358,7 +361,7 @@ export function App() {
         </div>
         <div>
           <p>この醸造所でつくるビールを待っている人がいる。</p>
-          <p>正直に言えば、自分たちの力だけでは立て直すのが難しい状態です。それでも「再開を待っています」「また飲める日を楽しみにしています」と声をかけてくださる方がいます。その一言が、いまの私たちを立たせています。</p>
+          <p>正直に言えば、自分たちの力だけでは立て直すのが難しい状態です。それでも「再開を待っています」「また飲める日を楽しみにしています」と声をかけてくださる方がいます。その一言が、今の私たちを立たせています。</p>
           <p><strong><span className="ln">この場所からもう一度ビールを出すために、</span><span className="ln">どうか、お力を貸していただけないでしょうか。</span></strong></p>
           <button className="primary" onClick={go}>再出発を支援する</button>
         </div>
@@ -367,7 +370,7 @@ export function App() {
 
     <section id="recovery" className="recovery section">
       <header className="section-head">
-        <p className="section-label">資金の使いみち</p>
+        <p className="section-label">資金の使い道</p>
         <h2><span className="ln">いただいた1円まで、</span><span className="ln">醸造を再開する設備に。</span></h2>
       </header>
       <div className="recovery-body">
@@ -389,7 +392,7 @@ export function App() {
     </section>
 
     <section className="join section">
-      <header><p className="section-label">応援のかたち</p><h2><span className="ln">いただいた応援は、</span><span className="ln">一杯になってお返しします。</span></h2><p>ビールで、醸造所で、お店で。4つの応援のかたちをご用意しました。</p></header>
+      <header><p className="section-label">応援の形</p><h2><span className="ln">いただいた応援は、</span><span className="ln">一杯になってお返しします。</span></h2><p>ビールで、醸造所で、お店で。4つの応援の形をご用意しました。</p></header>
       <div className="featured-grid">
         {featured.map(([title, copy, price, image]) => <button key={title} onClick={go} className="featured-card">
           <img src={image} alt={`${title}（${price}）のリターン案内`} loading="lazy" decoding="async" />
@@ -424,7 +427,7 @@ export function App() {
       <div>
         <p className="section-label">オリジナルラベル</p>
         <h2><span className="ln">贈る相手の名前が入った、</span><span className="ln">世界に一つの6本を。</span></h2>
-        <p>誕生日、結婚祝い、開店祝いに。15,000円プランは3種類のテンプレートにお名前・日付・ひとことを。22,000円プランは、ご希望を伺って一から制作します。あなたの支援が、そのまま誰かへの贈り物になります。</p>
+        <p>誕生日、結婚祝い、開店祝いに。15,000円プランは3種類のテンプレートにお名前・日付・一言を。22,000円プランは、ご希望を伺って一から制作します。あなたの支援が、そのまま誰かへの贈り物になります。</p>
       </div>
       <div className="label-types">
         <article><span>A</span><b>記念日タイプ</b><small>お名前／日付</small></article>
@@ -441,7 +444,7 @@ export function App() {
       <div className="people-body">
       <article>
         <p>私たちがつくりたかったのは、矢切を知らない人にとっての入口です。歴史や地理から入るのは、少し遠い。けれど一杯のビールなら、飲んだその日から、矢切は自分と関係のある地名になります。</p>
-        <p>その入口は、醸造所が止まっているあいだ閉じたままです。町の側から見れば、知られる機会がひとつ減り続けている。私たちが急いでいるのは、そのためです。</p>
+        <p>その入口は、醸造所が止まっている間、閉じたままです。町の側から見れば、知られる機会が一つ減り続けている。私たちが急いでいるのは、そのためです。</p>
       </article>
       <div className="people-media">
         <figure className="people-portrait">
@@ -456,7 +459,7 @@ export function App() {
       </div>
       <div className="beliefs">
         <article><span>01</span><h3>人と人をつなげる。</h3><p>クラフトビールは、ただの飲み物ではありません。隣に座った初対面の人と話が始まる。その一杯を置ける場所を、この町に残したい。</p></article>
-        <article><span>02</span><h3>地域の物語を届ける。</h3><p>飲んだ人が矢切の風景を思い浮かべる。そんな一杯を増やすことが、この町が知られるいちばんの近道だと思っています。</p></article>
+        <article><span>02</span><h3>地域の物語を届ける。</h3><p>飲んだ人が矢切の風景を思い浮かべる。そんな一杯を増やすことが、この町が知られる一番の近道だと思っています。</p></article>
         <article><span>03</span><h3>革新と、おいしさを両立する。</h3><p>新しい味を試し続けながら、「二人がうまいと思ったものだけを出す」という一線は、7年間一度も譲っていません。</p></article>
       </div>
       <div id="team" className="team-story">
@@ -466,7 +469,7 @@ export function App() {
         </div>
         <div className="team-story-copy">
           <p>矢切ブルワリーを支えているのは、代表の渡辺と、醸造を担当する石田です。二人の出会いは大学の自転車競技部。ともに練習し、同じレースを走った経験から、言葉を尽くさなくても互いの考えを理解できる、厚いチームワークが育ちました。</p>
-          <p>いま向き合うのは、自転車ではなく醸造タンクです。役割は違っても、味を決めるときは必ず二人。どちらか一人が納得しただけのビールは、世に出しません。二人そろって「うまい」と納得したものだけを届ける。創業から変えていない、たった一つの基準です。</p>
+          <p>今向き合うのは、自転車ではなく醸造タンクです。役割は違っても、味を決めるときは必ず二人。どちらか一人が納得しただけのビールは、世に出しません。二人揃って「うまい」と納得したものだけを届ける。創業から変えていない、たった一つの基準です。</p>
         </div>
         <div className="team-roles">
           <article><span>REPRESENTATIVE</span><h4>渡辺 ／ 代表</h4><p>矢切という土地と人をつなぎ、ビールをきっかけに新しい出会いが生まれる場所を育てます。</p></article>
@@ -478,12 +481,12 @@ export function App() {
 
     <section id="beers" className="beer-section section">
       <header>
-        <p className="section-label">なにをつくっているのか</p>
-        <h2><span className="ln">苦いから苦手、を</span><span className="ln">くつがえす一杯を。</span></h2>
-        <p>初めての方には「ビールってこんなに飲みやすいんだ」という驚きを。愛好家には「この組み合わせは初めてだ」という発見を。飲みやすさと個性は両立できる。そこだけは、ずっと疑わずにやってきました。以下の4本は、いずれもいまは仕込めません。</p>
+        <p className="section-label">何をつくっているのか</p>
+        <h2><span className="ln">苦いから苦手、を</span><span className="ln">覆す一杯を。</span></h2>
+        <p>初めての方には「ビールってこんなに飲みやすいんだ」という驚きを。愛好家には「この組み合わせは初めてだ」という発見を。飲みやすさと個性は両立できる。そこだけは、ずっと疑わずにやってきました。以下の4本は、いずれも今は仕込めません。</p>
       </header>
       <div className="beer-intro">
-        <article><b>はじめての方へ</b><p>フルーツを使った親しみやすい味わいや、軽やかな飲み口から。苦味が苦手な方でも楽しめるラインナップを用意しています。</p></article>
+        <article><b>初めての方へ</b><p>フルーツを使った親しみやすい味わいや、軽やかな飲み口から。苦味が苦手な方でも楽しめるラインナップを用意しています。</p></article>
         <article><b>愛好家の方へ</b><p>ホップの組み合わせや投入方法、瓶内熟成まで。飲むたびに新しい表情が見つかる、奥行きのある一杯を追求しています。</p></article>
         <article><b>矢切を知らない方へ</b><p>「このビール、どこでつくっているんだろう」。印象に残る味わいから、この町を知るきっかけをつくります。</p></article>
       </div>
@@ -514,7 +517,7 @@ export function App() {
       <strong>矢切から、また、ビールを。</strong>
     </section>
 
-    <footer><div><b>矢切ブルワリー合同会社 ／ 日暮醸造所</b><span>千葉県松戸市</span></div><p>人物・地域写真の一部は構成イメージです。公開時は実際の写真へ差し替えてください。応援購入総額・達成率・サポーター数・残り日数は未確定のため「—」で表示しています。</p></footer>
+    <footer><div><b>矢切ブルワリー合同会社 ／ 日暮醸造所</b><span>千葉県松戸市</span></div><p>一部の写真は構成イメージです。支援総額・支援者数・達成率は、公式オンラインショップの注文データを集計して自動更新しています（表示中の日付時点の数値です）。</p></footer>
 
     <div className={showBar ? 'support-bar show' : 'support-bar'}>
       <div className="support-bar-figure"><small>第一目標</small><strong>1,000,000<span>円</span></strong></div>

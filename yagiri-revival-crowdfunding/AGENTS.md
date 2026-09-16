@@ -117,3 +117,42 @@ this was introduced and reverted once already.
 
 Phrases to keep rationed: 「7年」(hero / facts / beliefs — three, far apart), 「あと5cm」
 (hero / facts / damage heading — a deliberate echo), 「その途中」and 「循環」(once each).
+
+## Typography scale (durable, 2026-09-16)
+
+`design-v3.css` ends with a **TYPOGRAPHY NORMALIZATION (v3.1)** block that is the
+single source of truth for text size. Four tokens, nothing else:
+
+- `--t-lead` `clamp(15.5px,1.2vw,18px)` — 主要段落
+- `--t-card` `clamp(14px,1.05vw,15.5px)` — カード／カラム内の本文
+- `--t-cap` `clamp(12.5px,.95vw,13.5px)` — キャプション・注記・フッター
+- `--t-label` `clamp(11.5px,.9vw,12.5px)` — ラベル・メタ情報
+
+Rule: **nothing carrying meaning renders below 11px at any width.** Before this pass
+card copy ranged 11–15.5px and captions 9–11.5px; the mobile hero shrank labels to
+7.5–8.5px. Do not reintroduce a bare `font-size:10px` (or smaller) on text.
+
+Two bugs this fixed — do not undo:
+
+1. `.damage-details span{font-size:10px}` (and the same shape in `.team-roles`,
+   `.beer-lineup`, `.beliefs`, `.label-types`, `.facts`) matched the `<span class="ln">`
+   **inside the h3**, so 「あと5cm。」 rendered as 10px gold micro-type instead of a
+   19px serif heading. Those selectors are now `article>span:not(.ln)`, and
+   `.ln{font-size:inherit;font-weight:inherit;letter-spacing:inherit;color:inherit}`
+   guards the rest. `.ln` is a *line* unit, never a *style* unit.
+2. `.fund-v4-badge` (目標金額 circle) only fits legible type above 1024px. Below that it
+   is `display:none` and `.fund-v4-progress-foot > .fund-v4-status-text` carries the same
+   status under the progress bar. Above 1024px the reverse: the badge shows it and the
+   status text hides, so it is never stated twice.
+
+`.damage-story h2 .ln` no longer gets `white-space:nowrap` at ≤680px — it fought
+`text-wrap:balance` and could push the heading past the viewport.
+
+## Copy conventions (durable, 2026-09-16)
+
+- 使えなくなった原料は **4,500杯分**. The earlier 5,000杯 figure is wrong and contradicts
+  the number published in the brewery's own SNS video. Also corrected in
+  `public/crowdfunding-a4.html`.
+- 漢字/かな: 飲み込む・始める・溜まる・使い道・形・今・間・一つ・一番・一言・覆す・何・揃って・
+  温かい・初めて are written in kanji. **`つくる` stays in kana** — it is the brand voice and
+  sidesteps the 作る/造る split. Auxiliary verbs (いただく・ください・できる) stay in kana.
