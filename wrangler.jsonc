@@ -2,6 +2,7 @@
   "name": "yagiri-fund",
   "main": "yagiri-revival-crowdfunding/dist/server/index.js",
   "compatibility_date": "2026-08-28",
+  "workers_dev": true,
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
