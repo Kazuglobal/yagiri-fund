@@ -1,5 +1,16 @@
 import { useEffect, useState } from 'react';
 
+// 集計APIの配信元。
+// 本番ページ (fund.yagiribrewery.com) は矢切ブルワリー側のCloudflareアカウントで
+// 配信されており、こちらからは KV の作成もシークレットの登録もできない。
+// そのため BASE 連携（KV・cron・OAuth）は開発側アカウントの Worker
+// `yagiri-fund-lp` に置き、本番ページからはクロスオリジンで取得する。
+// Worker 側の /api/fund-summary は Access-Control-Allow-Origin: * を返すため、
+// 単純な GET であればプリフライトなしで通る。
+// 将来ページ本体と同じアカウントに API を置けるようになったら '' に戻せば
+// 相対パス取得に戻る。
+const FUND_API_ORIGIN = 'https://yagiri-fund-lp.globalbunny.workers.dev';
+
 const rewards = [
   ['3,000円', '応援枠', 'オリジナルステッカー／タップルーム1杯無料券', '40', '/assets/reward-3000.png', '3,000円 応援枠 ステッカーとタップルーム1杯無料券のリターン案内', 'https://www.yagiribrewery.com/items/155698632'],
   ['5,000円', '早割', '瓶ビール6本', '30', '/assets/reward-5000.png', '5,000円 早割 瓶ビール6本のリターン案内', 'https://www.yagiribrewery.com/items/155699333'],
@@ -57,7 +68,7 @@ export function App() {
 
   useEffect(() => {
     let isMounted = true;
-    fetch('/api/fund-summary')
+    fetch(`${FUND_API_ORIGIN}/api/fund-summary`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
