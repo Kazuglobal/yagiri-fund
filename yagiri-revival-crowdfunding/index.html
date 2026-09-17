@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Meta Pixel Code（noscript 版は <body> 先頭。本体は public/meta-pixel.js。CSP がインラインスクリプトを禁止しているため外部ファイル化） -->
+    <script src="/meta-pixel.js"></script>
+    <!-- End Meta Pixel Code -->
     <title>水に沈んだ醸造所を、もう一度。｜矢切ブルワリー 復旧クラウドファンディング</title>
     <meta
       name="description"
@@ -108,6 +111,8 @@
     </script>
   </head>
   <body>
+    <!-- Meta Pixel（noscript）: <head> 内の <img> は不正なHTMLになるため <body> 先頭に置く -->
+    <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1768844530815552&ev=PageView&noscript=1" /></noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

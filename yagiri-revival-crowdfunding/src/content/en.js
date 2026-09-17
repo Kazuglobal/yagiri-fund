@@ -283,6 +283,7 @@ export const en = {
     ],
     legal: 'Drinking by anyone under 20 is prohibited by law in Japan. Those under 20 cannot purchase rewards that include alcohol. Providing the alcohol from your rewards to third parties for a fee requires the supporter to hold a liquor sales license.',
     legalShop: { before: "Orders and payment are handled through Yagiri Brewery's official online shop. For business details, payment methods, and return conditions, please see the ", link: 'Legal Notice under the Act on Specified Commercial Transactions', after: ' (in Japanese).' },
+    adsNotice: 'This site uses the Meta Platforms pixel to measure the effectiveness of our advertising.',
   },
 
   closing: {

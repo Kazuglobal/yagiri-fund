@@ -127,12 +127,22 @@ test("CSP allows exactly the external origins the page actually uses", async () 
     assert.ok(directive("connect-src").includes(apiOrigin), `connect-src must allow ${apiOrigin}`);
   }
 
+  const html = await readFile(new URL("index.html", ROOT), "utf8");
+
   // the production zone injects the Cloudflare Web Analytics beacon at the edge
   assert.ok(directive("script-src").includes("https://static.cloudflareinsights.com"));
   assert.ok(directive("connect-src").includes("https://cloudflareinsights.com"));
 
+  // Meta Pixel: base code is a same-origin file (inline scripts are blocked), fbevents.js and /tr are Meta's
+  if (html.includes("/meta-pixel.js")) {
+    const pixel = await readFile(new URL("public/meta-pixel.js", ROOT), "utf8");
+    assert.ok(pixel.includes("https://connect.facebook.net/"), "meta-pixel.js must load fbevents.js");
+    assert.ok(directive("script-src").includes("https://connect.facebook.net"));
+    assert.ok(directive("img-src").includes("https://www.facebook.com"));
+    assert.ok(directive("connect-src").includes("https://www.facebook.com"));
+  }
+
   // Google Fonts: stylesheet from googleapis, font files from gstatic
-  const html = await readFile(new URL("index.html", ROOT), "utf8");
   if (html.includes("fonts.googleapis.com")) {
     assert.ok(directive("style-src").includes("https://fonts.googleapis.com"));
     assert.ok(directive("font-src").includes("https://fonts.gstatic.com"));

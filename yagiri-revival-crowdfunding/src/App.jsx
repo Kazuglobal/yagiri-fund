@@ -11,6 +11,7 @@ import {
   itemUrl,
 } from './content/data.js';
 import { CONTENT, LanguageSwitch, useLanguage } from './i18n.jsx';
+import { listenCheckoutClicks, observeRewardsView } from './metaPixel.js';
 
 // 集計APIの配信元。
 // 本番ページ (fund.yagiribrewery.com) は矢切ブルワリー側のCloudflareアカウントで
@@ -24,6 +25,20 @@ import { CONTENT, LanguageSwitch, useLanguage } from './i18n.jsx';
 const FUND_API_ORIGIN = 'https://yagiri-fund-lp.globalbunny.workers.dev';
 
 // Intended line breaks: each entry becomes a `.ln` block (see AGENTS.md).
+// Meta Pixel の InitiateCheckout 用属性（src/metaPixel.js がクリックを拾う）。
+// リターン名は表示言語に関わらず日本語で送り、広告側の集計を1本にまとめる。
+const checkoutAttrs = (reward, price) => ({ 'data-reward': reward, 'data-price': price });
+// 特定のリターンに紐づかない「支援する」系ボタン（リターン一覧へスクロールするだけ）
+const GENERAL_CTA = checkoutAttrs('rewards', 0);
+const rewardName = (i) => {
+  const { kind, title } = CONTENT.ja.returns.items[i];
+  return `${REWARDS[i].price}円 ${kind} ${title}`;
+};
+const featuredAttrs = (i) => {
+  const reward = REWARDS.find((r) => r.image === FEATURED_IMAGES[i]);
+  return checkoutAttrs(CONTENT.ja.join.featured[i].title, reward ? reward.price : 0);
+};
+
 const Lines = ({ lines }) => lines.map((line) => <span className="ln" key={line}>{line}</span>);
 
 // Amount with a language-specific prefix (¥) or trailing unit (円 / 人).
@@ -102,6 +117,9 @@ export function App() {
     observer.observe(hero);
     return () => observer.disconnect();
   }, []);
+  useEffect(() => listenCheckoutClicks(), []);
+  useEffect(() => observeRewardsView(document.getElementById('returns')), []);
+
   const [menuOpen, setMenuOpen] = useState(false);
   const go = () => {
     setMenuOpen(false);
@@ -132,7 +150,7 @@ export function App() {
       </nav>
       <div className="header-actions">
         <LanguageSwitch lang={lang} onChange={setLang} label={t.langSwitch.groupLabel} />
-        <button className="primary small header-cta" onClick={go}>{t.header.cta}</button>
+        <button className="primary small header-cta" onClick={go} {...GENERAL_CTA}>{t.header.cta}</button>
       </div>
       <button
         className="menu-toggle"
@@ -157,7 +175,7 @@ export function App() {
             {navLinks.map(([href, label]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>)}
             <a href={OFFICIAL_URL} target="_blank" rel="noopener noreferrer">{t.nav.official}</a>
           </nav>
-          <button className="primary" onClick={go} style={{ marginTop: '20px', width: '100%' }}>{t.header.mobileCta}</button>
+          <button className="primary" onClick={go} style={{ marginTop: '20px', width: '100%' }} {...GENERAL_CTA}>{t.header.mobileCta}</button>
         </div>
       </div>
     )}
@@ -205,7 +223,7 @@ export function App() {
 
         {/* 3. Primary Orange Heart CTA Button */}
         <div className="hero-v4-cta-wrap">
-          <button className="hero-v4-cta-btn" onClick={go}>
+          <button className="hero-v4-cta-btn" onClick={go} {...GENERAL_CTA}>
             <span className="cta-heart-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
@@ -338,7 +356,7 @@ export function App() {
         <div>
           {t.damage.appeal.paragraphs.map((p) => <p key={p}>{p}</p>)}
           <p><strong><Lines lines={t.damage.appeal.ask} /></strong></p>
-          <button className="primary" onClick={go}>{t.damage.appeal.cta}</button>
+          <button className="primary" onClick={go} {...GENERAL_CTA}>{t.damage.appeal.cta}</button>
         </div>
       </div>
     </section>
@@ -367,12 +385,12 @@ export function App() {
     <section className="join section">
       <header><p className="section-label">{t.join.label}</p><h2><Lines lines={t.join.heading} /></h2><p>{t.join.intro}</p></header>
       <div className="featured-grid">
-        {t.join.featured.map(({ title, copy, price }, i) => <button key={title} onClick={go} className="featured-card">
+        {t.join.featured.map(({ title, copy, price }, i) => <button key={title} onClick={go} className="featured-card" {...featuredAttrs(i)}>
           <img src={FEATURED_IMAGES[i]} alt={t.join.featuredAlt(title, price)} loading="lazy" decoding="async" />
           <span><b>{title}</b><small>{copy}</small><strong>{price}</strong></span>
         </button>)}
       </div>
-      <button className="text-link" onClick={go}>{t.join.seeAll}</button>
+      <button className="text-link" onClick={go} {...GENERAL_CTA}>{t.join.seeAll}</button>
     </section>
 
     <section id="returns" className="returns section">
@@ -396,7 +414,7 @@ export function App() {
                 <li>{currentLeft === 0 ? <strong style={{ color: '#dc2626' }}>{t.returns.soldOut}</strong> : t.returns.left(currentLeft)}</li>
                 <li>{t.returns.delivery}</li>
               </ul>
-              <a className="reward-cta" href={itemUrl(reward.itemId)} target="_blank" rel="noopener noreferrer">{t.returns.cta}</a>
+              <a className="reward-cta" href={itemUrl(reward.itemId)} target="_blank" rel="noopener noreferrer" {...checkoutAttrs(rewardName(i), reward.price)}>{t.returns.cta}</a>
             </article>
           );
         })}
@@ -472,12 +490,12 @@ export function App() {
       <div>
         {t.faq.items.map((item) => <article key={item.q}><b>{item.q}</b><p>{item.a}</p></article>)}
       </div>
-      <p className="legal">{t.faq.legal}<br />{t.faq.legalShop.before}<a href={LAW_URL} target="_blank" rel="noopener noreferrer">{t.faq.legalShop.link}</a>{t.faq.legalShop.after}</p>
+      <p className="legal">{t.faq.legal}<br />{t.faq.legalShop.before}<a href={LAW_URL} target="_blank" rel="noopener noreferrer">{t.faq.legalShop.link}</a>{t.faq.legalShop.after}<br />{t.faq.adsNotice}</p>
     </section>
 
     <section className="closing section">
       <img src="/assets/yagiri-river.png" alt={t.closing.imageAlt} loading="lazy" decoding="async" />
-      <div><h2><Lines lines={t.closing.heading} /></h2><p><Lines lines={t.closing.body} /></p><button className="primary" onClick={go}>{t.closing.cta}</button></div>
+      <div><h2><Lines lines={t.closing.heading} /></h2><p><Lines lines={t.closing.body} /></p><button className="primary" onClick={go} {...GENERAL_CTA}>{t.closing.cta}</button></div>
       <strong>{t.closing.tagline}</strong>
     </section>
 
@@ -486,7 +504,7 @@ export function App() {
     <div className={showBar ? 'support-bar show' : 'support-bar'}>
       <div className="support-bar-figure"><small>{t.supportBar.label}</small><strong><Money parts={t.yen(TARGET_AMOUNT)} /></strong></div>
       <p className="support-bar-note">{t.supportBar.note[0]}<br />{t.supportBar.note[1]}</p>
-      <button className="primary small" onClick={go}>{t.supportBar.cta}</button>
+      <button className="primary small" onClick={go} {...GENERAL_CTA}>{t.supportBar.cta}</button>
     </div>
 
   </main>;
