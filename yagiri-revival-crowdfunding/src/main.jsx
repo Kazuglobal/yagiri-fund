@@ -4,6 +4,7 @@ import { App } from "./App.jsx";
 import "./styles.css";
 import "./design-v2.css";
 import "./design-v3.css";
+import "./i18n.css";
 
 const container = document.getElementById("root");
 const tree = (

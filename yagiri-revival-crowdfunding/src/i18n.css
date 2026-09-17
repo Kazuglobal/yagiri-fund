@@ -1,0 +1,98 @@
+/* ============================================================
+   LANGUAGE SWITCH (JA / EN)
+   Loaded after design-v3.css. Uses the same type tokens (v3.1).
+   ============================================================ */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+@media (min-width: 961px) {
+  /* the original third column was a fixed 128px for the CTA alone */
+  .site-header { grid-template-columns: 1fr auto auto; }
+}
+
+.lang-switch {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px;
+  background: var(--white);
+}
+
+.lang-switch button {
+  border: 0;
+  background: transparent;
+  color: #555555;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  line-height: 1;
+  min-width: 44px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.lang-switch button[aria-pressed="true"] {
+  background: var(--navy);
+  color: #ffffff;
+  cursor: default;
+}
+
+.lang-switch button:not([aria-pressed="true"]):hover { color: var(--navy); }
+
+/* English reward cards: the reward artwork is Japanese, so a text caption carries the content */
+.reward-caption {
+  display: grid;
+  gap: 4px;
+  margin: 14px 0 12px;
+}
+.reward-caption strong {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(17px, 1.4vw, 20px);
+  color: var(--navy);
+}
+.reward-caption span {
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--blue);
+}
+.reward-caption p {
+  margin: 0;
+  font-size: var(--t-card);
+  line-height: 1.6;
+  color: #555555;
+}
+
+/* Latin text: Japanese tracking and palt look loose in English */
+html[lang="en"] body { letter-spacing: 0; font-feature-settings: normal; }
+html[lang="en"] h1,
+html[lang="en"] h2,
+html[lang="en"] h3 { letter-spacing: 0; overflow-wrap: break-word; }
+
+/* narrow headers — kept last so they win over the base rules above */
+@media (max-width: 860px) {
+  .header-actions { margin-left: auto; margin-right: 6px; }
+  /* the 38px gap was sized for the desktop grid; with the switch added it pushed the menu button off-screen */
+  .site-header { gap: 8px; }
+  .brand-text strong { white-space: nowrap; }
+}
+
+@media (max-width: 480px) {
+  .header-actions { margin-right: 2px; }
+  .lang-switch button { min-width: 38px; min-height: 28px; padding: 0 8px; font-size: 11.5px; }
+}
+
+@media (max-width: 359px) {
+  .brand { gap: 8px; }
+  .brand strong { font-size: 14px; }
+  .brand small { letter-spacing: .08em; }
+  .lang-switch button { min-width: 34px; padding: 0 6px; }
+}

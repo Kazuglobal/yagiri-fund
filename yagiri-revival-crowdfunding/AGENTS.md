@@ -156,3 +156,21 @@ Two bugs this fixed — do not undo:
 - 漢字/かな: 飲み込む・始める・溜まる・使い道・形・今・間・一つ・一番・一言・覆す・何・揃って・
   温かい・初めて are written in kanji. **`つくる` stays in kana** — it is the brand voice and
   sidesteps the 作る/造る split. Auxiliary verbs (いただく・ください・できる) stay in kana.
+
+## Language switch (durable, 2026-09-17)
+
+The page has a 日本語 / EN switch in the header (`src/i18n.jsx`).
+
+- **All copy lives in `src/content/ja.js` and `src/content/en.js`**; language-independent
+  data (images, reward prices, stock, BASE item IDs) lives in `src/content/data.js`.
+  Never put a user-visible string back into `App.jsx`. Change both dictionaries together —
+  `tests/i18n.test.mjs` fails if their shapes (keys, array lengths) diverge.
+- Arrays of strings are `.ln` lines; the line rules above apply to English too.
+- **Prerender stays Japanese.** The first client render is always `ja` so hydration matches;
+  the preference is applied in an effect. Priority: `?lang=en` → localStorage `yagiri-lang` → `ja`.
+  Toggling updates `?lang=` with `replaceState` (hash is preserved) plus `<html lang>` and `<title>`.
+- Reward artwork is Japanese-only, so English cards add a `.reward-caption` (price / kind / title).
+  Japanese cards do not (`returns.showCaption`).
+- Mobile header: `.site-header` gap is 8px at ≤860px. The inherited 38px desktop gap pushed the
+  menu button off-screen once the switch was added. Checked down to 320px in both languages.
+- English money is `¥1,000,000`; Japanese is `1,000,000円`. The product name `MERCKX 青` is not translated.
