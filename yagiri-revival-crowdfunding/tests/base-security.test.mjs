@@ -446,3 +446,87 @@ test("fund-summary errors do not expose internal details", async () => {
     console.error = originalError;
   }
 });
+
+// --- Revoked access token (e.g. after the BASE client secret is regenerated) ---
+
+// BASE answers a revoked token with 400 invalid_request 「アクセストークンが無効です。」
+const REVOKED_TOKEN_REPLY = () =>
+  jsonReply({ error: "invalid_request", error_description: "アクセストークンが無効です。" }, 400);
+
+function silenceConsoleError() {
+  const original = console.error;
+  console.error = () => {};
+  return () => {
+    console.error = original;
+  };
+}
+
+test("a revoked cached access token is refreshed and the aggregation retried", async () => {
+  const tokenRequests = [];
+  mockBase((url, init) => {
+    const u = new URL(url);
+    const auth = init?.headers?.Authorization;
+    if (u.pathname.endsWith("/oauth/token")) {
+      tokenRequests.push(new URLSearchParams(init.body).get("grant_type"));
+      return jsonReply({ access_token: "fresh-token", refresh_token: "fresh-refresh", expires_in: 3600 });
+    }
+    if (auth !== "Bearer fresh-token") return REVOKED_TOKEN_REPLY();
+    if (u.pathname.endsWith("/orders")) return jsonReply({ orders: [order({ unique_key: "a" })] });
+    return jsonReply({ order: { order_items: [item(CF_ITEM, 3000)] } });
+  });
+  const kv = createKv({ BASE_ACCESS_TOKEN: "revoked-token", BASE_REFRESH_TOKEN: "old-refresh" });
+  const restore = silenceConsoleError();
+  try {
+    const summary = await refreshFundSummary("id", "new-secret", kv);
+
+    assert.equal(summary.totalAmount, 3000);
+    assert.deepEqual(tokenRequests, ["refresh_token"]);
+    assert.equal(kv.store.get("BASE_ACCESS_TOKEN"), "fresh-token");
+    assert.equal(kv.store.get("BASE_REFRESH_TOKEN"), "fresh-refresh");
+  } finally {
+    restore();
+  }
+});
+
+test("when the refresh token is also rejected, the run fails loudly and keeps the previous summary", async () => {
+  mockBase((url) => {
+    if (new URL(url).pathname.endsWith("/oauth/token")) {
+      return jsonReply({ error: "invalid_grant" }, 400);
+    }
+    return REVOKED_TOKEN_REPLY();
+  });
+  const previous = JSON.stringify({ isConfigured: true, totalAmount: 26000 });
+  const kv = createKv({
+    BASE_ACCESS_TOKEN: "revoked-token",
+    BASE_REFRESH_TOKEN: "revoked-refresh",
+    LATEST_FUND_SUMMARY: previous,
+  });
+  const restore = silenceConsoleError();
+  try {
+    await assert.rejects(refreshFundSummary("id", "new-secret", kv), /\/api\/base\/auth/);
+    assert.equal(kv.store.get("LATEST_FUND_SUMMARY"), previous);
+    assert.equal(kv.store.get("BASE_ACCESS_TOKEN"), undefined);
+  } finally {
+    restore();
+  }
+});
+
+test("other API errors are not mistaken for a revoked token", async () => {
+  const tokenRequests = [];
+  mockBase((url) => {
+    if (new URL(url).pathname.endsWith("/oauth/token")) {
+      tokenRequests.push(url);
+      return jsonReply({ access_token: "x", expires_in: 3600 });
+    }
+    return jsonReply({ error: "rate_limited" }, 429);
+  });
+  const kv = createKv({ BASE_ACCESS_TOKEN: "token", BASE_REFRESH_TOKEN: "refresh" });
+  const restore = silenceConsoleError();
+  try {
+    await assert.rejects(refreshFundSummary("id", "secret", kv));
+    assert.deepEqual(tokenRequests, []);
+    assert.equal(kv.store.get("BASE_ACCESS_TOKEN"), "token");
+  } finally {
+    restore();
+  }
+});

@@ -153,13 +153,28 @@ const ORDER_ITEMS_CACHE_KEY = 'BASE_ORDER_ITEMS_CACHE';
 // 1回の集計で新しく取りに行く注文詳細の上限。超えた分は次回（5分後）に回す。
 const MAX_DETAIL_FETCHES_PER_RUN = 40;
 
+// BASE は失効したアクセストークンに 401 ではなく
+// 400 invalid_request「アクセストークンが無効です。」を返す（client secret を再発行した直後など）。
+function isRevokedTokenResponse(status, body) {
+  if (status === 401) return true;
+  try {
+    const data = JSON.parse(body);
+    return data.error === 'invalid_token' || /アクセストークン/.test(data.error_description || '');
+  } catch {
+    return false;
+  }
+}
+
 async function baseGet(path, token) {
   const res = await fetch(BASE_API + path, {
     headers: { Authorization: 'Bearer ' + token },
   });
   if (!res.ok) {
-    console.error('BASE API error ' + path.split('?')[0] + ' (' + res.status + '):', await res.text());
-    throw new Error('BASE API error (' + res.status + ')');
+    const body = await res.text();
+    console.error('BASE API error ' + path.split('?')[0] + ' (' + res.status + '):', body);
+    const err = new Error('BASE API error (' + res.status + ')');
+    err.revokedToken = isRevokedTokenResponse(res.status, body);
+    throw err;
   }
   return res.json();
 }
@@ -200,12 +215,32 @@ function extractCfItems(detail) {
 
 // BASE から集計し直す。途中で API が失敗したら例外を投げ、
 // 不完全な合計でキャッシュを上書きしない（取得済みの注文明細だけは保存し、次回に引き継ぐ）。
+//
+// KV に残っているアクセストークンは期限前でも BASE 側で失効していることがある。
+// その場合はキャッシュを捨ててリフレッシュトークンで取り直し、1回だけやり直す。
 export async function refreshFundSummary(clientId, clientSecret, kv) {
   const token = await getValidAccessToken(clientId, clientSecret, kv);
   if (!token) {
     return unconfiguredSummary();
   }
 
+  try {
+    return await aggregateFundSummary(token, kv);
+  } catch (err) {
+    if (!err.revokedToken || !kv) throw err;
+  }
+
+  await kv.delete('BASE_ACCESS_TOKEN');
+  const renewed = await getValidAccessToken(clientId, clientSecret, kv);
+  if (!renewed) {
+    throw new Error(
+      'BASE access token was revoked and could not be refreshed; re-authorize via /api/base/auth'
+    );
+  }
+  return aggregateFundSummary(renewed, kv);
+}
+
+async function aggregateFundSummary(token, kv) {
   const orders = await listCountableOrders(token);
   const previousCache = (kv && (await kv.get(ORDER_ITEMS_CACHE_KEY, { type: 'json' }))) || {};
 
