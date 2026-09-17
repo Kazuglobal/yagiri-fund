@@ -144,80 +144,120 @@ export async function getFundSummary(kv) {
   return cached || unconfiguredSummary();
 }
 
-// BASE から全件集計し直す。途中で API が失敗したら例外を投げ、
-// 不完全な合計でキャッシュを上書きしない。
+// 注文ごとの商品明細のキャッシュ。BASE の注文一覧 (GET /1/orders) は商品情報を
+// 返さないため、商品IDと金額は注文詳細 (GET /1/orders/detail/:unique_key) から取る。
+// 詳細を毎回全件取り直すとレート制限（5,000回/時）と Workers のサブリクエスト上限を
+// 食い潰すので、一覧の modified が変わらない注文は前回の明細を使い回す。
+// 保存するのは CF 対象商品の [item_id, 単価, 数量] だけで、氏名・住所などは持たない。
+const ORDER_ITEMS_CACHE_KEY = 'BASE_ORDER_ITEMS_CACHE';
+// 1回の集計で新しく取りに行く注文詳細の上限。超えた分は次回（5分後）に回す。
+const MAX_DETAIL_FETCHES_PER_RUN = 40;
+
+async function baseGet(path, token) {
+  const res = await fetch(BASE_API + path, {
+    headers: { Authorization: 'Bearer ' + token },
+  });
+  if (!res.ok) {
+    console.error('BASE API error ' + path.split('?')[0] + ' (' + res.status + '):', await res.text());
+    throw new Error('BASE API error (' + res.status + ')');
+  }
+  return res.json();
+}
+
+// 支援として数える注文の一覧（未入金・キャンセルを除く）。
+async function listCountableOrders(token) {
+  const limit = ORDERS_PAGE_SIZE;
+  const countable = [];
+  for (let page = 0; ; page += 1) {
+    if (page >= MAX_ORDER_PAGES) {
+      throw new Error('BASE orders exceeded ' + MAX_ORDER_PAGES * limit + ' orders; refusing to cache a partial total');
+    }
+    const data = await baseGet('/orders?limit=' + limit + '&offset=' + page * limit, token);
+    const orders = data.orders || [];
+    for (const order of orders) {
+      if (isCountableOrder(order)) {
+        countable.push({ key: String(order.unique_key), modified: order.modified ?? null });
+      }
+    }
+    if (orders.length < limit) {
+      return countable;
+    }
+  }
+}
+
+// 注文詳細から CF 対象商品だけを [item_id, 単価, 数量] で取り出す。
+// 明細単位でキャンセルされた商品は数えない。
+function extractCfItems(detail) {
+  const items = detail?.order?.order_items || [];
+  const result = [];
+  for (const item of items) {
+    const itemId = String(item.item_id);
+    if (!CF_ITEM_IDS.has(itemId) || item.status === 'cancelled') continue;
+    result.push([itemId, Number(item.price) || 0, Number(item.amount) || 1]);
+  }
+  return result;
+}
+
+// BASE から集計し直す。途中で API が失敗したら例外を投げ、
+// 不完全な合計でキャッシュを上書きしない（取得済みの注文明細だけは保存し、次回に引き継ぐ）。
 export async function refreshFundSummary(clientId, clientSecret, kv) {
   const token = await getValidAccessToken(clientId, clientSecret, kv);
   if (!token) {
     return unconfiguredSummary();
   }
 
-  const limit = ORDERS_PAGE_SIZE;
+  const orders = await listCountableOrders(token);
+  const previousCache = (kv && (await kv.get(ORDER_ITEMS_CACHE_KEY, { type: 'json' }))) || {};
+
+  // 今回数える注文だけを残す（キャンセル・未入金に変わった注文はここで落ちる）
+  const cache = {};
+  let fetched = 0;
+  let failure = null;
+
+  for (const { key, modified } of orders) {
+    const cached = previousCache[key];
+    if (cached && cached.m === modified) {
+      cache[key] = cached;
+      continue;
+    }
+    if (failure) continue;
+    if (fetched >= MAX_DETAIL_FETCHES_PER_RUN) {
+      failure = new Error('More than ' + MAX_DETAIL_FETCHES_PER_RUN + ' new orders; the rest are fetched on the next run');
+      continue;
+    }
+    try {
+      const detail = await baseGet('/orders/detail/' + encodeURIComponent(key), token);
+      cache[key] = { m: modified, i: extractCfItems(detail) };
+      fetched += 1;
+    } catch (err) {
+      failure = err;
+    }
+  }
+
+  if (kv && fetched > 0) {
+    await kv.put(ORDER_ITEMS_CACHE_KEY, JSON.stringify(cache));
+  }
+  if (failure) {
+    throw failure;
+  }
 
   let totalAmount = 0;
-  const supporterOrders = new Set();
+  let supportersCount = 0;
   const itemSales = {};
-
   for (const id of CF_ITEM_IDS) {
     itemSales[id] = 0;
   }
 
-  for (let page = 0; ; page += 1) {
-    if (page >= MAX_ORDER_PAGES) {
-      throw new Error('BASE orders exceeded ' + MAX_ORDER_PAGES * limit + ' orders; refusing to cache a partial total');
-    }
-    const offset = page * limit;
-    const res = await fetch(BASE_API + '/orders?limit=' + limit + '&offset=' + offset, {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    });
-
-    if (!res.ok) {
-      console.error('BASE orders API error (' + res.status + '):', await res.text());
-      throw new Error('BASE orders API error (' + res.status + ')');
-    }
-
-    const data = await res.json();
-    const orders = data.orders || [];
-
-    if (orders.length === 0) {
-      break;
-    }
-
-    for (const order of orders) {
-      if (!isCountableOrder(order)) {
-        continue;
-      }
-
-      const receiverDetails = order.order_receiver_detail || [];
-      let isCFOrder = false;
-
-      for (const receiver of receiverDetails) {
-        const items = receiver.order_item_details || [];
-        for (const item of items) {
-          const itemIdStr = String(item.item_id);
-          if (CF_ITEM_IDS.has(itemIdStr)) {
-            isCFOrder = true;
-            const price = Number(item.price) || 0;
-            const amount = Number(item.amount) || 1;
-            totalAmount += price * amount;
-            itemSales[itemIdStr] = (itemSales[itemIdStr] || 0) + amount;
-          }
-        }
-      }
-
-      if (isCFOrder) {
-        supporterOrders.add(order.unique_key || order.order_id);
-      }
-    }
-
-    if (orders.length < limit) {
-      break;
+  for (const { key } of orders) {
+    const lines = cache[key]?.i || [];
+    if (lines.length === 0) continue;
+    supportersCount += 1;
+    for (const [itemId, price, amount] of lines) {
+      totalAmount += price * amount;
+      itemSales[itemId] += amount;
     }
   }
 
-  const supportersCount = supporterOrders.size;
   const percentage = Math.min(100, Math.round((totalAmount / TARGET_AMOUNT) * 1000) / 10);
 
   const summary = {

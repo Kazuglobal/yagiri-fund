@@ -5,6 +5,10 @@
   "name": "yagiri-fund-lp",
   "main": "dist/server/index.js",
   "compatibility_date": "2026-08-29",
+  // ダッシュボードで追加した変数を wrangler deploy で消さない。
+  // 2026-09-16、BASE_CLIENT_ID / BASE_CLIENT_SECRET が Text 型で登録されていたため
+  // デプロイで消え、BASE のトークン更新が止まった。シークレットは本来 Secret 型で入れること。
+  "keep_vars": true,
   "assets": {
     "directory": "dist/client",
     "binding": "ASSETS",

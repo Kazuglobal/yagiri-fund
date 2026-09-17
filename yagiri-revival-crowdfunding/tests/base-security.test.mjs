@@ -64,16 +64,49 @@ function callbackRequest(state = "s") {
   });
 }
 
+// BASE の実際の形に合わせる：
+//   GET /1/orders                    → 注文の概要のみ（商品情報は含まれない）
+//   GET /1/orders/detail/:unique_key → { order: { order_items: [{ item_id, price, amount, status }] } }
+// 以前は一覧に商品情報が入っている架空の形で模擬しており、テストは通るのに
+// 本番では常に0円になっていた。
+const CF_ITEM_20000 = "155702192";
+
 function order(overrides = {}) {
   return {
     unique_key: overrides.unique_key || "order-1",
     cancelled: null,
     dispatch_status: "ordered",
-    order_receiver_detail: [
-      { order_item_details: [{ item_id: CF_ITEM, price: 3000, amount: 1 }] },
-    ],
+    modified: 1700000000,
+    first_name: "個人情報",
+    last_name: "キャッシュされてはいけない",
     ...overrides,
   };
+}
+
+function item(itemId, price, amount = 1, status = "ordered") {
+  return { item_id: Number(itemId), price, amount, status };
+}
+
+// orders: 一覧に出す注文, details: unique_key → order_items
+function mockShop({ orders, details = {}, pageSize = 100 }) {
+  const calls = { list: 0, detail: [] };
+  mockBase((url) => {
+    const u = new URL(url);
+    const detail = u.pathname.match(/\/orders\/detail\/(.+)$/);
+    if (detail) {
+      const key = decodeURIComponent(detail[1]);
+      calls.detail.push(key);
+      const items = details[key] ?? [item(CF_ITEM, 3000)];
+      return jsonReply({ order: { unique_key: key, order_items: items } });
+    }
+    if (u.pathname.endsWith("/orders")) {
+      calls.list += 1;
+      const offset = Number(u.searchParams.get("offset") || 0);
+      return jsonReply({ orders: orders.slice(offset, offset + pageSize) });
+    }
+    return jsonReply({ error: "unexpected " + u.pathname }, 404);
+  });
+  return calls;
 }
 
 // --- 1. OAuth endpoints require the admin key and a matching state ---
@@ -198,23 +231,128 @@ test("OAuth callback stores tokens when state and shop match", async () => {
 
 // --- 2. Only paid, non-cancelled orders count ---
 
-test("unpaid and cancelled orders are excluded from the total", async () => {
-  mockBase(() =>
-    jsonReply({
-      orders: [
-        order({ unique_key: "paid" }),
-        order({ unique_key: "unpaid", dispatch_status: "unpaid" }),
-        order({ unique_key: "cancelled-status", dispatch_status: "cancelled" }),
-        order({ unique_key: "cancelled-flag", cancelled: 1700000000 }),
-      ],
-    }),
-  );
+test("the reported shop state totals 26,000 yen from 3 supporters (items come from the detail API)", async () => {
+  const calls = mockShop({
+    orders: [order({ unique_key: "a" }), order({ unique_key: "b" }), order({ unique_key: "c" })],
+    details: {
+      a: [item(CF_ITEM, 3000)],
+      b: [item(CF_ITEM, 3000)],
+      c: [item(CF_ITEM_20000, 20000)],
+    },
+  });
+  const kv = createKv({ BASE_ACCESS_TOKEN: "token" });
+
+  const summary = await refreshFundSummary("id", "secret", kv);
+
+  assert.equal(summary.totalAmount, 26000);
+  assert.equal(summary.supportersCount, 3);
+  assert.equal(summary.itemSales[CF_ITEM], 2);
+  assert.equal(summary.itemSales[CF_ITEM_20000], 1);
+  assert.deepEqual(calls.detail.sort(), ["a", "b", "c"]);
+});
+
+test("unpaid and cancelled orders are excluded and never fetched in detail", async () => {
+  const calls = mockShop({
+    orders: [
+      order({ unique_key: "paid" }),
+      order({ unique_key: "unpaid", dispatch_status: "unpaid" }),
+      order({ unique_key: "cancelled-status", dispatch_status: "cancelled" }),
+      order({ unique_key: "cancelled-flag", cancelled: 1700000000 }),
+    ],
+  });
   const kv = createKv({ BASE_ACCESS_TOKEN: "token" });
 
   const summary = await refreshFundSummary("id", "secret", kv);
 
   assert.equal(summary.totalAmount, 3000);
   assert.equal(summary.supportersCount, 1);
+  assert.deepEqual(calls.detail, ["paid"]);
+});
+
+test("cancelled line items and non-crowdfunding items are not counted", async () => {
+  mockShop({
+    orders: [order({ unique_key: "mixed" }), order({ unique_key: "shop-only" })],
+    details: {
+      mixed: [item(CF_ITEM, 3000, 2), item(CF_ITEM_20000, 20000, 1, "cancelled"), item("999", 1500)],
+      "shop-only": [item("999", 1500)],
+    },
+  });
+  const kv = createKv({ BASE_ACCESS_TOKEN: "token" });
+
+  const summary = await refreshFundSummary("id", "secret", kv);
+
+  assert.equal(summary.totalAmount, 6000);
+  assert.equal(summary.supportersCount, 1);
+  assert.equal(summary.itemSales[CF_ITEM_20000], 0);
+});
+
+test("order details are cached so an unchanged shop costs no detail calls on the next run", async () => {
+  const orders = [order({ unique_key: "a" }), order({ unique_key: "b" })];
+  const kv = createKv({ BASE_ACCESS_TOKEN: "token" });
+
+  mockShop({ orders });
+  await refreshFundSummary("id", "secret", kv);
+
+  const second = mockShop({ orders });
+  const summary = await refreshFundSummary("id", "secret", kv);
+
+  assert.equal(summary.totalAmount, 6000);
+  assert.deepEqual(second.detail, []);
+});
+
+test("an order whose modified timestamp changed is fetched again", async () => {
+  const kv = createKv({ BASE_ACCESS_TOKEN: "token" });
+  mockShop({ orders: [order({ unique_key: "a", modified: 1 })] });
+  await refreshFundSummary("id", "secret", kv);
+
+  // 後から商品がキャンセルされた
+  const again = mockShop({
+    orders: [order({ unique_key: "a", modified: 2 })],
+    details: { a: [item(CF_ITEM, 3000, 1, "cancelled")] },
+  });
+  const summary = await refreshFundSummary("id", "secret", kv);
+
+  assert.deepEqual(again.detail, ["a"]);
+  assert.equal(summary.totalAmount, 0);
+  assert.equal(summary.supportersCount, 0);
+});
+
+test("the detail cache stores no personal information", async () => {
+  mockShop({ orders: [order({ unique_key: "a" })] });
+  const kv = createKv({ BASE_ACCESS_TOKEN: "token" });
+
+  await refreshFundSummary("id", "secret", kv);
+
+  const stored = [...kv.store.entries()]
+    .filter(([key]) => key !== "BASE_ACCESS_TOKEN")
+    .map(([, value]) => value)
+    .join("\n");
+  assert.doesNotMatch(stored, /個人情報|キャッシュされてはいけない/);
+});
+
+test("a failed detail call keeps the previous summary but saves the details already fetched", async () => {
+  const previous = JSON.stringify({ isConfigured: true, totalAmount: 99000 });
+  const kv = createKv({ BASE_ACCESS_TOKEN: "token", LATEST_FUND_SUMMARY: previous });
+  const both = [order({ unique_key: "ok" }), order({ unique_key: "boom" })];
+  mockBase((url) => {
+    const u = new URL(url);
+    if (u.pathname.endsWith("/orders")) {
+      return jsonReply({ orders: Number(u.searchParams.get("offset") || 0) ? [] : both });
+    }
+    if (u.pathname.endsWith("/detail/ok")) {
+      return jsonReply({ order: { order_items: [item(CF_ITEM, 3000)] } });
+    }
+    return jsonReply({ error: "rate_limited" }, 429);
+  });
+
+  await assert.rejects(refreshFundSummary("id", "secret", kv));
+  assert.equal(kv.store.get("LATEST_FUND_SUMMARY"), previous);
+
+  // 次回は失敗した分だけ取りに行く
+  const retry = mockShop({ orders: both });
+  const summary = await refreshFundSummary("id", "secret", kv);
+  assert.deepEqual(retry.detail, ["boom"]);
+  assert.equal(summary.totalAmount, 6000);
 });
 
 // --- 3. Public requests do not drive BASE API calls; failures never cache partial totals ---
@@ -248,26 +386,34 @@ test("fund-summary never calls BASE even when no summary is cached yet", async (
 });
 
 test("orders beyond the old 1,000 cap are counted", async () => {
-  let page = 0;
-  mockBase(() => {
-    page += 1;
-    const size = page <= 11 ? 100 : 0;
-    return jsonReply({
-      orders: Array.from({ length: size }, (_, i) => order({ unique_key: `p${page}-${i}` })),
-    });
-  });
+  const orders = Array.from({ length: 1100 }, (_, i) => order({ unique_key: `o${i}` }));
   const kv = createKv({ BASE_ACCESS_TOKEN: "token" });
+  const previous = JSON.stringify({ isConfigured: true, totalAmount: 1 });
+  kv.store.set("LATEST_FUND_SUMMARY", previous);
 
-  const summary = await refreshFundSummary("id", "secret", kv);
+  // 詳細の取得は1回あたり上限付きで、残りは次回以降に回る。
+  // 取り切るまでは不完全な合計を公開しない。
+  let summary = null;
+  let runs = 0;
+  while (!summary && runs < 100) {
+    runs += 1;
+    const calls = mockShop({ orders });
+    try {
+      summary = await refreshFundSummary("id", "secret", kv);
+    } catch {
+      assert.equal(kv.store.get("LATEST_FUND_SUMMARY"), previous);
+    }
+    assert.ok(calls.detail.length <= 40, `run ${runs} fetched ${calls.detail.length} details`);
+  }
 
   assert.equal(summary.supportersCount, 1100);
+  assert.equal(summary.totalAmount, 3_300_000);
 });
 
 test("a BASE error mid-pagination keeps the previous summary", async () => {
-  let page = 0;
-  mockBase(() => {
-    page += 1;
-    if (page === 1) {
+  mockBase((url) => {
+    const u = new URL(url);
+    if (u.pathname.endsWith("/orders") && !Number(u.searchParams.get("offset") || 0)) {
       return jsonReply({ orders: Array.from({ length: 100 }, (_, i) => order({ unique_key: `o${i}` })) });
     }
     return jsonReply({ error: "rate_limited" }, 429);
