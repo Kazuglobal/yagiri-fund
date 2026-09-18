@@ -8,6 +8,7 @@ import {
   REWARDS,
   TAPROOM_IMAGES,
   TARGET_AMOUNT,
+  calculateRemaining,
   itemUrl,
 } from './content/data.js';
 import { CONTENT, LanguageSwitch, useLanguage } from './i18n.jsx';
@@ -51,6 +52,7 @@ export function App() {
   const t = CONTENT[lang];
   const [slideIndex, setSlideIndex] = useState(0);
   const [showBar, setShowBar] = useState(false);
+  const [remaining, setRemaining] = useState(() => calculateRemaining());
   const [fundData, setFundData] = useState({
     totalAmount: 0,
     supportersCount: 0,
@@ -90,6 +92,13 @@ export function App() {
     const timer = setInterval(() => {
       setSlideIndex((prev) => (prev + 1) % HERO_SLIDES.length);
     }, 3800);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setRemaining(calculateRemaining());
+    }, 60000);
     return () => clearInterval(timer);
   }, []);
 
@@ -251,6 +260,21 @@ export function App() {
               <span className="fund-col-label">{t.hero.supportersLabel}</span>
               <strong className="fund-col-val nowrap"><Money parts={t.hero.supporters(fundData.supportersCount)} unitClass="fund-unit" /></strong>
             </div>
+            <div className="fund-v4-col">
+              <span className="fund-col-label">{t.hero.remainingLabel}</span>
+              <strong className="fund-col-val nowrap">
+                <Money
+                  parts={
+                    remaining.ended
+                      ? t.hero.remainingEnded()
+                      : remaining.days > 0
+                      ? t.hero.remainingDays(remaining.days)
+                      : t.hero.remainingHours(Math.max(1, remaining.hours))
+                  }
+                  unitClass="fund-unit"
+                />
+              </strong>
+            </div>
             <div className="fund-v4-badge">
               <span className="badge-sub">{t.hero.badgeGoal}</span>
               <strong className="badge-amount"><Money parts={t.yen(TARGET_AMOUNT)} unitTag="small" /></strong>
@@ -272,6 +296,7 @@ export function App() {
             </div>
             <div className="fund-v4-progress-foot">
               <span className="fund-v4-status-text">{statusText(t.hero.statusRate)}</span>
+              <span className="fund-v4-deadline">{t.hero.deadline}</span>
               <span className="fund-v4-date">{t.asOf(fundData.asOf)}</span>
             </div>
           </div>

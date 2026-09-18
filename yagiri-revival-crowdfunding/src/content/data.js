@@ -57,3 +57,17 @@ export const DAMAGE_DOC_IMAGES = [
 export const OFFICIAL_URL = 'https://www.yagiribrewery.com/';
 export const LAW_URL = 'https://www.yagiribrewery.com/law';
 export const TARGET_AMOUNT = 1_000_000;
+
+// 令和8年（2026年）10月末（10月31日 23:59:59 JST）終了
+export const CAMPAIGN_END_DATE = new Date('2026-10-31T23:59:59+09:00');
+
+export const calculateRemaining = (now = new Date(), target = CAMPAIGN_END_DATE) => {
+  const diff = target.getTime() - now.getTime();
+  if (diff <= 0) {
+    return { ended: true, days: 0, hours: 0, totalHours: 0 };
+  }
+  const totalHours = Math.floor(diff / (1000 * 60 * 60));
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = totalHours % 24;
+  return { ended: false, days, hours, totalHours };
+};

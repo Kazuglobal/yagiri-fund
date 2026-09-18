@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { ja } from "../src/content/ja.js";
 import { en } from "../src/content/en.js";
-import { REWARDS, HERO_SLIDES, TAPROOM_IMAGES, DAMAGE_DOC_IMAGES, FEATURED_IMAGES } from "../src/content/data.js";
+import { REWARDS, HERO_SLIDES, TAPROOM_IMAGES, DAMAGE_DOC_IMAGES, FEATURED_IMAGES, CAMPAIGN_END_DATE, calculateRemaining } from "../src/content/data.js";
 
 // Walks both dictionaries together and reports every path whose type or
 // array length differs, so a missing English string fails loudly instead of
@@ -43,7 +43,31 @@ test("formatters produce the expected money and date strings", () => {
   assert.deepEqual(en.yen(1_000_000), { prefix: "¥", value: "1,000,000", unit: "" });
   assert.equal(ja.asOf(new Date(2026, 8, 10)), "2026年9月10日時点");
   assert.equal(en.asOf(new Date(2026, 8, 10)), "As of Sep 10, 2026");
+  assert.deepEqual(ja.hero.remainingDays(43), { value: "43", unit: "日" });
+  assert.deepEqual(en.hero.remainingDays(43), { value: "43", unit: " days" });
+  assert.deepEqual(en.hero.remainingDays(1), { value: "1", unit: " day" });
+  assert.deepEqual(ja.hero.remainingHours(12), { value: "12", unit: "時間" });
+  assert.deepEqual(en.hero.remainingHours(12), { value: "12", unit: " hrs" });
+  assert.deepEqual(en.hero.remainingHours(1), { value: "1", unit: " hr" });
+  assert.deepEqual(ja.hero.remainingEnded(), { value: "募集終了", unit: "" });
+  assert.deepEqual(en.hero.remainingEnded(), { value: "Ended", unit: "" });
   assert.equal(en.returns.items[0].alt, "¥3,000 Supporter reward: Original sticker + 1 free drink ticket for the taproom");
+});
+
+test("calculateRemaining counts down correctly to October 31, 2026 23:59:59", () => {
+  const target = new Date("2026-10-31T23:59:59+09:00");
+  const onSep18 = calculateRemaining(new Date("2026-09-18T19:31:32+09:00"), target);
+  assert.equal(onSep18.ended, false);
+  assert.equal(onSep18.days, 43);
+  assert.equal(onSep18.hours, 4);
+
+  const onFinalDay = calculateRemaining(new Date("2026-10-31T10:00:00+09:00"), target);
+  assert.equal(onFinalDay.ended, false);
+  assert.equal(onFinalDay.days, 0);
+  assert.equal(onFinalDay.hours, 13);
+
+  const afterEnd = calculateRemaining(new Date("2026-11-01T00:00:01+09:00"), target);
+  assert.equal(afterEnd.ended, true);
 });
 
 test("English copy keeps the flood measurements straight", () => {
