@@ -373,6 +373,39 @@ export function App() {
           </article>
         ))}
       </div>
+      <div className="damage-video-block">
+        <div className="damage-video-copy">
+          <p className="section-label">{t.damage.video.label}</p>
+          <h3><Lines lines={t.damage.video.heading} /></h3>
+          <p className="damage-video-lead">{t.damage.video.lead}</p>
+          <div className="damage-video-note-wrap">
+            <span className="damage-video-note">
+              <span className="video-sound-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                </svg>
+              </span>
+              <span>{t.damage.video.note}</span>
+            </span>
+          </div>
+        </div>
+        <div className="damage-video-player-wrap">
+          <div className="damage-video-frame">
+            <video
+              className="damage-video-player"
+              src="/assets/flood-appeal.mp4"
+              poster="/assets/flood-appeal-poster.webp"
+              controls
+              playsInline
+              preload="metadata"
+              aria-label={t.damage.video.caption}
+            >
+              {t.damage.video.fallback}
+            </video>
+          </div>
+          <p className="damage-video-caption">{t.damage.video.caption}</p>
+        </div>
+      </div>
       <div className="damage-appeal">
         <div>
           <p className="section-label">{t.damage.appeal.label}</p>

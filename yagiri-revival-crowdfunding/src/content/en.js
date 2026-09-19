@@ -139,6 +139,14 @@ export const en = {
         body: 'More people were drinking our beer, and we were adding equipment to increase brewing capacity. Investment meant to make more beer has turned into the cost of recovering from being unable to make any.',
       },
     ],
+    video: {
+      label: 'Video Documentary / On-Site Record',
+      heading: ['The flooded brewery floor,', 'and the work to rebuild (41s)'],
+      lead: 'A 41-second short documentary recorded on-site by our founders, showing the immediate aftermath of the flood and our team cleaning muddy kegs one by one by hand.',
+      note: '*Contains audio. Please check your volume.',
+      caption: 'Documentary of the flood aftermath and recovery efforts (41s, with sound)',
+      fallback: 'Your browser does not support playing this video.',
+    },
     appeal: {
       label: 'Even so, once more',
       heading: ['What keeps us going is knowing', 'people are waiting.'],
